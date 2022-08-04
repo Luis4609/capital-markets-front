@@ -3,7 +3,29 @@ import Head from "next/head";
 import Footer from "../components/Footer";
 import styles from "../styles/Home.module.css";
 
+import CurrencyData from "../components/CurrencyData";
+import { useState, useEffect } from "react";
+
 const Home: NextPage = () => {
+  const [amount, setAmount] = useState<number>(0);
+  const [amountOutPut, setAmountOutPut] = useState<number>(0);
+
+  const [selected, setSelected] = useState<string>("");
+  const [selectedOutPut, setSelectedOutPut] = useState<string>("");
+
+  useEffect(() => {
+    const host = "api.frankfurter.app";
+
+    fetch(
+      `https://${host}/latest?amount=${amount}&from=${selected}&to=${selectedOutPut}`
+    )
+      .then((resp) => resp.json())
+      .then((data) => {
+        setAmountOutPut(data.rates[selectedOutPut]);
+      })
+      .catch((e) => console.log(e));
+  }, [selectedOutPut]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -14,6 +36,24 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Capital Markets</h1>
+
+        <CurrencyData
+          currencyTypeChange="origen"
+          disable={false}
+          amount={amount}
+          setAmount={setAmount}
+          selected={selected}
+          setSelected={setSelected}
+        />
+
+        <CurrencyData
+          currencyTypeChange="destino"
+          disable
+          amount={amountOutPut}
+          setAmount={setAmountOutPut}
+          selected={selectedOutPut}
+          setSelected={setSelectedOutPut}
+        />
       </main>
       <Footer></Footer>
     </div>
