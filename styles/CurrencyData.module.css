@@ -1,0 +1,15 @@
+.currencyinput {
+  padding: 10px;
+  margin: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.currencyselect {
+  padding: 10px;
+  border: 0;
+  /* box-shadow: 0 0 15px 4px rgba(238, 234, 234, 0.06); */
+  border-radius: 10px;
+}

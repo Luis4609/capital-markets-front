@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
+import styles from "../styles/CurrencyData.module.css";
 
 interface CurrencyProps {
   currencyTypeChange: string;
@@ -33,6 +34,8 @@ const CurrencyData = (props: CurrencyProps) => {
         value={props.amount}
         onChange={(e) => props.setAmount(parseFloat(e.target.value))}
         disabled={props.disable}
+        className={styles.currencyinput}
+        required
       />
 
       <select
@@ -41,6 +44,7 @@ const CurrencyData = (props: CurrencyProps) => {
         id="currencies"
         onChange={handleChange}
         value={props.selected}
+        className={styles.currencyselect}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
