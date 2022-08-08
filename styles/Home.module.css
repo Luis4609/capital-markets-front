@@ -93,6 +93,10 @@
   margin-left: 0.5rem;
 }
 
+.errormessage {
+  color: rgb(240, 87, 87);
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;

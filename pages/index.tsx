@@ -11,7 +11,7 @@ const Home: NextPage = () => {
   const [amountOutPut, setAmountOutPut] = useState<number>(0);
 
   const [selected, setSelected] = useState<string>("");
-  const [selectedOutPut, setSelectedOutPut] = useState<string>("");
+  const [selectedOutPut, setSelectedOutPut] = useState<string>(" ");
 
   useEffect(() => {
     const host = "api.frankfurter.app";
@@ -25,6 +25,10 @@ const Home: NextPage = () => {
         console.error(`Error to fetch exchange conversion: ${error.message}`)
       );
   }, [amount, selected, selectedOutPut]); //Add dependencies for useEffect: [amount, selected]
+
+  if(selected === selectedOutPut){
+    console.log("SOMOS Iguales")
+  }
 
   return (
     <div className={styles.container}>
@@ -54,6 +58,7 @@ const Home: NextPage = () => {
           selected={selectedOutPut}
           setSelected={setSelectedOutPut}
         />
+        {selected === selectedOutPut ? (<p className={styles.errormessage}>Has seleccionado la misma moneda</p>) : null}
       </main>
       <Footer></Footer>
     </div>
