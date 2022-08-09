@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
+import styles from "../styles/CurrencyData.module.css";
 
 interface CurrencyProps {
   currencyTypeChange: string;
@@ -8,31 +9,32 @@ interface CurrencyProps {
   selected: string;
   setSelected: Dispatch<SetStateAction<string>>;
 }
+const options = [
+  { value: "", text: "--Choose a currency--" },
+  { value: "USD", text: "US Dolar" },
+  { value: "EUR", text: "Euro" },
+  { value: "GBP", text: "British pound" },
+  { value: "JPY", text: "Yen" },
+];
 
-const CurrencyData = (props: CurrencyProps) => {
-  const options = [
-    { value: "", text: "--Elige una divisa--" },
-    { value: "USD", text: "USD" },
-    { value: "EUR", text: "Euro" },
-    { value: "GBP", text: "British pound" },
-    { value: "JPY", text: "Yen" }
-  ];
-
+const CurrencyData = ({currencyTypeChange, amount, setAmount, disable, selected, setSelected}: CurrencyProps) => {
   //manejador para recoger la selección de divisa de origen
   const handleChange = (e: { target: { value: any } }) => {
-    props.setSelected(e.target.value);
+    setSelected(e.target.value);
   };
 
   return (
     <div>
-      <h5>Divisa de {props.currencyTypeChange}</h5>
+      <h5>Currency {currencyTypeChange}</h5>
 
       <input
         aria-label="amount"
         type="number"
-        value={props.amount}
-        onChange={(e) => props.setAmount(parseFloat(e.target.value))}
-        disabled={props.disable}
+        value={amount}
+        onChange={(e) => setAmount(parseFloat(e.target.value))}
+        disabled={disable}
+        className={styles.currencyinput}
+        required
       />
 
       <select
@@ -40,7 +42,8 @@ const CurrencyData = (props: CurrencyProps) => {
         name="currencies"
         id="currencies"
         onChange={handleChange}
-        value={props.selected}
+        value={selected}
+        className={styles.currencyselect}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -51,5 +54,16 @@ const CurrencyData = (props: CurrencyProps) => {
     </div>
   );
 };
+
+  export async function getStaticProps() {
+    const res = await fetch("http://localhost:8080/currencies/list-currencies");
+    const currencies = await res.json();
+
+    return {
+      props: {
+        currencies,
+      },
+    };
+  }
 
 export default CurrencyData;
