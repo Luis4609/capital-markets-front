@@ -8,7 +8,6 @@ import Layout from "../components/Layout/layout";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPageWithLayout = () => {
-  console.count("Rerender")
   const [amount, setAmount] = useState<number>(0);
   const [amountOutPut, setAmountOutPut] = useState<number>(0);
 
@@ -17,7 +16,6 @@ const Home: NextPageWithLayout = () => {
 
   useEffect(() => {
     const host = "api.frankfurter.app";
-    console.time("Exchange with API")
 
     fetch(
       `https://${host}/latest?amount=${amount}&from=${selected}&to=${selectedOutPut}`
@@ -27,8 +25,6 @@ const Home: NextPageWithLayout = () => {
       .catch((error) =>
         console.error(`Error to fetch exchange conversion: ${error.message}`)
       );
-
-      console.timeEnd("Exchange with API")
   }, [amount, selected, selectedOutPut]); //Add dependencies for useEffect: [amount, selected]
 
   // if (selected === selectedOutPut) {
@@ -58,9 +54,7 @@ const Home: NextPageWithLayout = () => {
           setSelected={setSelectedOutPut}
         />
         {selected === selectedOutPut ? (
-          <p className={styles.errormessage}>
-           You selected the same currency
-          </p>
+          <p className={styles.errormessage}>You selected the same currency</p>
         ) : null}
       </main>
     </div>
