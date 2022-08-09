@@ -1,3 +1,6 @@
+import { MenuItem, Select } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 import { Dispatch, SetStateAction } from "react";
 import styles from "../styles/CurrencyData.module.css";
 
@@ -17,7 +20,14 @@ const options = [
   { value: "JPY", text: "Yen" },
 ];
 
-const CurrencyData = ({currencyTypeChange, amount, setAmount, disable, selected, setSelected}: CurrencyProps) => {
+const CurrencyData = ({
+  currencyTypeChange,
+  amount,
+  setAmount,
+  disable,
+  selected,
+  setSelected,
+}: CurrencyProps) => {
   //manejador para recoger la selección de divisa de origen
   const handleChange = (e: { target: { value: any } }) => {
     setSelected(e.target.value);
@@ -51,19 +61,34 @@ const CurrencyData = ({currencyTypeChange, amount, setAmount, disable, selected,
           </option>
         ))}
       </select>
+
+      {/* <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Age</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={age}
+          label="Age"
+          onChange={handleChange}
+        >
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+      </FormControl> */}
     </div>
   );
 };
 
-  export async function getStaticProps() {
-    const res = await fetch("http://localhost:8080/currencies/list-currencies");
-    const currencies = await res.json();
+export async function getStaticProps() {
+  const res = await fetch("http://localhost:8080/currencies/list-currencies");
+  const currencies = await res.json();
 
-    return {
-      props: {
-        currencies,
-      },
-    };
-  }
+  return {
+    props: {
+      currencies,
+    },
+  };
+}
 
 export default CurrencyData;

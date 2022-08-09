@@ -1,10 +1,11 @@
 import { ReactElement, useEffect, useState } from "react";
 import { NextPageWithLayout } from "./_app";
 
-import Footer from "../components/Footer";
 import CurrencyData from "../components/CurrencyData";
+import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
 
+import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
 const Home: NextPageWithLayout = () => {
@@ -35,6 +36,12 @@ const Home: NextPageWithLayout = () => {
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>Capital Markets Converter</h1>
+        {/* <Image
+          alt="Next.js logo"
+          src="/background-converter.png"
+          width={1200}
+          height={400}
+        ></Image> */}
 
         <CurrencyData
           currencyTypeChange="From"

@@ -1,24 +1,30 @@
 .currencyinput {
   padding: 10px;
   margin: 0 10px;
-  border: 0;
   border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
 }
 
-.currencyinput:focus {
+/* .currencyinput:focus {
   background-color: #656465;
-}
+} */
 
 .currencyselect {
   padding: 10px;
-  border: 0;
   border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
 }
 
-.currencyselect:focus {
+/* .currencyselect:focus {
   background-color: #656465;
+} */
+
+@media (prefers-color-scheme: dark) {
+  .currencyinput,
+  .currencyselect {
+    background-color: #D8D3D4 ;
+  }
 }
+

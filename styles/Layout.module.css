@@ -8,7 +8,15 @@
   align-items: center;
   gap: 10px;
 }
-  
-  .main > section {
-    padding: 32px;
+
+.main > section {
+  padding: 32px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .main {
+    border-color: #222;
+    background: #111;
+    color: rgb(241, 232, 232);
   }
+}
