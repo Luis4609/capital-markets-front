@@ -5,8 +5,9 @@ import CurrencyData from "../components/CurrencyData";
 import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
 
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
+import Link from "next/link";
+import Sidebar from "../components/Sidebar";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState<number>(0);
@@ -63,6 +64,10 @@ const Home: NextPageWithLayout = () => {
         {selected === selectedOutPut ? (
           <p className={styles.errormessage}>You selected the same currency</p>
         ) : null}
+
+        <Link href="/historical">
+          <a>About Us</a>
+        </Link>
       </main>
     </div>
   );
@@ -71,6 +76,7 @@ const Home: NextPageWithLayout = () => {
 Home.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
+      <Sidebar></Sidebar>
       {page}
       <Footer></Footer>
     </Layout>

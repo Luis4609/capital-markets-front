@@ -1,31 +1,26 @@
-import { NextPage } from "next";
+import { NextPageWithLayout } from "./_app";
+
 import { useRouter } from "next/router";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+
+import Footer from "../components/Footer";
+import Layout from "../components/Layout/layout";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import { UserLoginSubmitForm } from "../types/user";
-import Stack from "@mui/material/Stack";
 
-const LoginPage: NextPage = () => {
+import { validationSchemaLogin } from "../validators/schema";
+import { ReactElement } from "react";
+
+const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
-
-  const regexEmail =
-    /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g;
-
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required").email("Email is invalid"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(6, "Password must be at least 6 characters")
-      .max(40, "Password must not exceed 40 characters"),
-  });
 
   const {
     register,
@@ -33,7 +28,7 @@ const LoginPage: NextPage = () => {
     reset,
     formState: { errors },
   } = useForm<UserLoginSubmitForm>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchemaLogin),
   });
 
   const onSubmit = (data: UserLoginSubmitForm) => {
@@ -100,6 +95,15 @@ const LoginPage: NextPage = () => {
         </Stack>
       </form>
     </Container>
+  );
+};
+
+LoginPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      {page}
+      <Footer></Footer>
+    </Layout>
   );
 };
 
