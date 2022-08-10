@@ -7,7 +7,7 @@ import Layout from "../components/Layout/layout";
 
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Navbar";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState<number>(0);
@@ -44,27 +44,30 @@ const Home: NextPageWithLayout = () => {
           height={400}
         ></Image> */}
 
-        <CurrencyData
-          currencyTypeChange="From"
-          disable={false}
-          amount={amount}
-          setAmount={setAmount}
-          selected={selected}
-          setSelected={setSelected}
-        />
+        <div className={styles.converter}>
+          <CurrencyData
+            currencyTypeChange="From"
+            disable={false}
+            amount={amount}
+            setAmount={setAmount}
+            selected={selected}
+            setSelected={setSelected}
+          />
 
-        <CurrencyData
-          currencyTypeChange="To"
-          disable
-          amount={amountOutPut}
-          setAmount={setAmountOutPut}
-          selected={selectedOutPut}
-          setSelected={setSelectedOutPut}
-        />
-        {selected === selectedOutPut ? (
-          <p className={styles.errormessage}>You selected the same currency</p>
-        ) : null}
-
+          <CurrencyData
+            currencyTypeChange="To"
+            disable
+            amount={amountOutPut}
+            setAmount={setAmountOutPut}
+            selected={selectedOutPut}
+            setSelected={setSelectedOutPut}
+          />
+          {selected === selectedOutPut ? (
+            <p className={styles.errormessage}>
+              You selected the same currency
+            </p>
+          ) : null}
+        </div>
         <Link href="/historical">
           <a>About Us</a>
         </Link>
