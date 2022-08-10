@@ -4,10 +4,10 @@ import { NextPageWithLayout } from "./_app";
 import CurrencyData from "../components/CurrencyData";
 import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
+import Navbar from "../components/Navbar";
 
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
-import Sidebar from "../components/Navbar";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState<number>(0);
@@ -79,7 +79,7 @@ const Home: NextPageWithLayout = () => {
 Home.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
-      <Sidebar></Sidebar>
+      <Navbar></Navbar>
       {page}
       <Footer></Footer>
     </Layout>

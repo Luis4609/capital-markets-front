@@ -25,7 +25,6 @@ const LoginPage: NextPageWithLayout = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<UserLoginSubmitForm>({
     resolver: yupResolver(validationSchemaLogin),

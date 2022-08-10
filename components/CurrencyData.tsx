@@ -34,35 +34,36 @@ const CurrencyData = ({
   };
 
   return (
-    <div>
-      <h5>Currency {currencyTypeChange}</h5>
+    <>
+      <h4>{currencyTypeChange}</h4>
 
-      <input
-        aria-label="amount"
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(parseFloat(e.target.value))}
-        disabled={disable}
-        className={styles.currencyinput}
-        required
-      />
+      <div className={styles.converter}>
+        <input
+          aria-label="amount"
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(parseFloat(e.target.value))}
+          disabled={disable}
+          className={styles.currencyinput}
+          required
+        />
 
-      <select
-        title="currencies-select"
-        name="currencies"
-        id="currencies"
-        onChange={handleChange}
-        value={selected}
-        className={styles.currencyselect}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.text}
-          </option>
-        ))}
-      </select>
+        <select
+          title="currencies-select"
+          name="currencies"
+          id="currencies"
+          onChange={handleChange}
+          value={selected}
+          className={styles.currencyselect}
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.text}
+            </option>
+          ))}
+        </select>
 
-      {/* <FormControl fullWidth>
+        {/* <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Age</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -76,7 +77,8 @@ const CurrencyData = ({
           <MenuItem value={30}>Thirty</MenuItem>
         </Select>
       </FormControl> */}
-    </div>
+      </div>
+    </>
   );
 };
 

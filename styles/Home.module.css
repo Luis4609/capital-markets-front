@@ -27,7 +27,7 @@
 .title {
   margin: 0;
   line-height: 1.15;
-  font-size: 3.75rem;
+  font-size: 3.25rem;
 }
 
 .title {
@@ -36,6 +36,13 @@
 
 .errormessage {
   color: rgb(240, 87, 87);
+}
+
+.converter {
+  border: 2px solid rgb(243, 232, 232);
+  border-radius: 5px;
+  padding: 25px;
+  margin: 4rem;
 }
 
 @media (max-width: 600px) {

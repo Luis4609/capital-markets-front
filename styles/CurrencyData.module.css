@@ -24,7 +24,6 @@
 @media (prefers-color-scheme: dark) {
   .currencyinput,
   .currencyselect {
-    background-color: #D8D3D4 ;
+    background-color: #d8d3d4;
   }
 }
-

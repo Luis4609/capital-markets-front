@@ -61,7 +61,7 @@ const HistoricalPage: NextPageWithLayout = () => {
     labels,
     datasets: [
       {
-        label: `Currency exchange between EUR and ${to}`,
+        label: `Currency exchange between USD and ${to}`,
         data: exchangeData.map((pepe) => pepe),
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
