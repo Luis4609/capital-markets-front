@@ -10,7 +10,6 @@ interface CurrencyProps {
   setSelected: Dispatch<SetStateAction<string>>;
 }
 const options = [
-  { value: "", text: "--Choose a currency--" },
   { value: "USD", text: "US Dolar" },
   { value: "EUR", text: "Euro" },
   { value: "GBP", text: "British pound" },

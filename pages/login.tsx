@@ -84,7 +84,7 @@ const LoginPage: NextPageWithLayout = () => {
             variant="outlined"
             onClick={() => router.push("/register")}
           >
-            Create new acount
+            Create new account
           </Button>
         </Stack>
       </form>
