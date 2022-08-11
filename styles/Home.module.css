@@ -39,7 +39,7 @@
 }
 
 .converter {
-  border: 2px solid rgb(243, 232, 232);
+  border: 3px solid rgb(243, 232, 232);
   border-radius: 5px;
   padding: 25px;
   margin: 4rem;
@@ -51,7 +51,7 @@
     flex-direction: column;
   }
 }
-
+/* 
 @media (prefers-color-scheme: dark) {
   .card,
   .footer {
@@ -63,4 +63,4 @@
   .logo img {
     filter: invert(1);
   }
-}
+} */

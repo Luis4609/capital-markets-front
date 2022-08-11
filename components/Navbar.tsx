@@ -14,24 +14,24 @@ const Navbar = () => {
       >
         <Toolbar sx={{ flexWrap: "wrap" }}>
           <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-            Capital Markets
+            <Link
+              variant="button"
+              color="inherit"
+              underline='none'
+              href="/"
+              sx={{ my: 1, mx: 1.5, fontSize: "28px" }}
+            >
+              Capital Markets
+            </Link>
           </Typography>
           <nav>
             <Link
               variant="button"
               color="text.primary"
-              href="#"
+              href="/"
               sx={{ my: 1, mx: 1.5 }}
             >
               Converter
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/historical"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Historical
             </Link>
             <Link
               variant="button"

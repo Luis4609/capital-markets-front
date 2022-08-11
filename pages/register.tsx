@@ -5,10 +5,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
 import {
-  Button, Checkbox, Container, FormControl,
+  Button,
+  Checkbox,
+  Container,
+  FormControl,
   FormControlLabel,
-  Stack, TextField,
-  Typography
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 
 import { UserSubmitForm } from "../types/user";
@@ -27,7 +31,7 @@ const RegisterPage: NextPage = () => {
   });
 
   const onSubmit = (data: UserSubmitForm) => {
-    console.log("PEpep" + JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data, null, 2));
     router.push("/");
   };
 
