@@ -1,6 +1,16 @@
-import { AppBar, Button, Link, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Button,
+  Link,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { useContext } from "react";
 
 const Navbar = () => {
+  const user = useContext({});
+
   return (
     <>
       <AppBar
@@ -34,9 +44,13 @@ const Navbar = () => {
               Converter
             </Link>
           </nav>
-          <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
-            Login
-          </Button>
+          {user ? (
+            <Avatar>H</Avatar>
+          ) : (
+            <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </>

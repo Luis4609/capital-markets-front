@@ -35,8 +35,8 @@ const HistoricalPage: NextPageWithLayout = () => {
 
   const router = useRouter();
   const { from, to } = router.query;
-
-  const TO_CURRENCY: string = to?.toString();
+  /* eslint-disable-next-line */
+  const TO_CURRENCY: string | undefined = to?.toString();
 
   useEffect(() => {
     fetch(`https://${API_URL}/2020-02-01..?amount=1&from=${from}&to=${to}`)
@@ -45,7 +45,7 @@ const HistoricalPage: NextPageWithLayout = () => {
       .catch((error) =>
         console.error(`Error to fetch exchange conversion: ${error.message}`)
       );
-  }, [from]);
+  }, [from, to]);
 
   //Labels
   const labels: string[] = [];
@@ -54,7 +54,7 @@ const HistoricalPage: NextPageWithLayout = () => {
 
   for (const [key, value] of Object.entries(historicData)) {
     labels.push(key);
-    exchangeData.push(value[TO_CURRENCY]);
+    exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
   const options = {

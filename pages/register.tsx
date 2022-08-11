@@ -18,6 +18,8 @@ import {
 import { UserSubmitForm } from "../types/user";
 import { schema } from "../validators/schema";
 
+import styles from "../styles/Login.module.css";
+
 const RegisterPage: NextPage = () => {
   const router = useRouter();
 
@@ -38,14 +40,7 @@ const RegisterPage: NextPage = () => {
   const label = { inputProps: { "aria-label": "Accept Terms" } };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <div className={styles.main}>
       <Typography
         variant="h6"
         color="textSecondary"
@@ -61,6 +56,7 @@ const RegisterPage: NextPage = () => {
           label="Full Name"
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("fullname")}
           error={errors.fullname ? true : false}
         />
@@ -73,6 +69,7 @@ const RegisterPage: NextPage = () => {
           label="Username"
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("username")}
           error={errors.username ? true : false}
         />
@@ -87,6 +84,7 @@ const RegisterPage: NextPage = () => {
           type="email"
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("email")}
           error={errors.email ? true : false}
         />
@@ -100,6 +98,7 @@ const RegisterPage: NextPage = () => {
           type="password"
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("password")}
           error={errors.password ? true : false}
         />
@@ -113,13 +112,14 @@ const RegisterPage: NextPage = () => {
           type="password"
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("confirmPassword")}
           error={errors.confirmPassword ? true : false}
         />
         <Typography variant="inherit" color="textSecondary">
           {errors.confirmPassword?.message}
         </Typography>
-        <FormControl>
+        <FormControl fullWidth>
           <FormControlLabel
             control={<Checkbox />}
             label=" I have read and agree to the Terms"
@@ -137,16 +137,8 @@ const RegisterPage: NextPage = () => {
           spacing={{ xs: 1, sm: 2, md: 4 }}
           mt={2}
         >
-          <Button type="submit" color="primary" variant="contained">
+          <Button type="submit" color="primary" variant="contained" fullWidth>
             Register
-          </Button>
-          <Button
-            type="submit"
-            color="secondary"
-            variant="contained"
-            onClick={() => reset()}
-          >
-            Reset
           </Button>
         </Stack>
         <Stack
@@ -156,13 +148,27 @@ const RegisterPage: NextPage = () => {
           spacing={{ xs: 1, sm: 2, md: 4 }}
           mt={2}
         >
-          <Button type="submit" color="primary" variant="contained">
-            Iniciar sesion
+          <Button
+            type="submit"
+            color="secondary"
+            variant="contained"
+            fullWidth
+            onClick={() => reset()}
+          >
+            Reset
           </Button>
-          
+          <Button
+            type="submit"
+            color="primary"
+            variant="outlined"
+            fullWidth
+            onClick={() => router.push("/login")}
+          >
+            Login
+          </Button>
         </Stack>
       </form>
-    </Container>
+    </div>
   );
 };
 

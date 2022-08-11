@@ -1,9 +1,12 @@
-import InstagramIcon from '@mui/icons-material/Instagram';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+
+import InstagramIcon from "@mui/icons-material/Instagram";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import FacebookSharpIcon from '@mui/icons-material/FacebookSharp';
 
 function Copyright() {
   return (
@@ -35,10 +38,10 @@ const Footer = () => {
         }}
       >
         <InstagramIcon></InstagramIcon>
+        <TwitterIcon></TwitterIcon>
+        <FacebookSharpIcon></FacebookSharpIcon>
         <Container maxWidth="sm">
-          <Typography variant="body1">
-           Company information: About us
-          </Typography>
+          <Typography variant="body1">Company information: About us</Typography>
           <Copyright />
         </Container>
       </Box>

@@ -18,7 +18,7 @@ import { UserLoginSubmitForm } from "../types/user";
 import { ReactElement } from "react";
 import { validationSchemaLogin } from "../validators/schema";
 
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Login.module.css";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();

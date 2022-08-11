@@ -1,6 +1,3 @@
-import { MenuItem, Select } from "@mui/material";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import { Dispatch, SetStateAction } from "react";
 import styles from "../styles/CurrencyData.module.css";
 

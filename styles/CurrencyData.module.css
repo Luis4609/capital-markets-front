@@ -4,6 +4,7 @@
   border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
+  background-color: #faf3f5;
 }
 
 /* .currencyinput:focus {
@@ -15,15 +16,16 @@
   border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
+  background-color: #faf3f5;
 }
 
 /* .currencyselect:focus {
   background-color: #656465;
 } */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .currencyinput,
   .currencyselect {
     background-color: #d8d3d4;
   }
-}
+} */
