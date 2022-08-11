@@ -9,12 +9,12 @@ import {
 export const schema = Yup.object().shape({
   fullname: Yup.string()
     .min(0)
-    .required("First name is required")
+    .required("Full name is required")
     .test("Only letters", "Only letters and big than 3 letter", (value) =>
       validateOnlyLetters(value)
     ),
   username: Yup.string()
-    .required("Last name is required")
+    .required("User name is required")
     .test("Only letters", "Only letters and big than 3 letter", (value) =>
       validateOnlyLetters(value)
     ),

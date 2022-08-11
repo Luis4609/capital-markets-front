@@ -60,7 +60,7 @@ const RegisterPage: NextPage = () => {
           {...register("fullname")}
           error={errors.fullname ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary">
+        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
           {errors.fullname?.message}
         </Typography>
 
@@ -74,8 +74,8 @@ const RegisterPage: NextPage = () => {
           error={errors.username ? true : false}
         />
 
-        <Typography variant="inherit" color="textSecondary">
-          {errors.fullname?.message}
+        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
+          {errors.username?.message}
         </Typography>
 
         <TextField
@@ -88,7 +88,7 @@ const RegisterPage: NextPage = () => {
           {...register("email")}
           error={errors.email ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary">
+        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
           {errors.email?.message}
         </Typography>
 
@@ -102,7 +102,7 @@ const RegisterPage: NextPage = () => {
           {...register("password")}
           error={errors.password ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary">
+        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
           {errors.password?.message}
         </Typography>
 
@@ -116,7 +116,7 @@ const RegisterPage: NextPage = () => {
           {...register("confirmPassword")}
           error={errors.confirmPassword ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary">
+        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
           {errors.confirmPassword?.message}
         </Typography>
         <FormControl fullWidth>
@@ -127,7 +127,7 @@ const RegisterPage: NextPage = () => {
             {...register("acceptTerms")}
           />
         </FormControl>
-        <Typography variant="inherit" color="textSecondary">
+        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
           {errors.acceptTerms?.message}
         </Typography>
         <Stack
