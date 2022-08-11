@@ -7,20 +7,20 @@ import {
 } from "../utils/validateInput";
 
 export const schema = Yup.object().shape({
-  firstName: Yup.string()
+  fullname: Yup.string()
     .min(0)
     .required("First name is required")
     .test("Only letters", "Only letters and big than 3 letter", (value) =>
       validateOnlyLetters(value)
     ),
-  lastName: Yup.string()
+  username: Yup.string()
     .required("Last name is required")
     .test("Only letters", "Only letters and big than 3 letter", (value) =>
       validateOnlyLetters(value)
     ),
-  phone: Yup.string()
-    .required("Phone is required")
-    .test("Phone", "Phone is not valid", (value) => validateInputPhone(value)),
+  // phone: Yup.string()
+  //   .required("Phone is required")
+  //   .test("Phone", "Phone is not valid", (value) => validateInputPhone(value)),
   email: Yup.string()
     .email("Email is invalid")
     .required("Email is required")

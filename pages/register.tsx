@@ -69,7 +69,7 @@ const RegisterPage: NextPage = () => {
         </Typography>
 
         <TextField
-          id="password"
+          id="username"
           label="Username"
           variant="outlined"
           margin="normal"
@@ -138,7 +138,7 @@ const RegisterPage: NextPage = () => {
           mt={2}
         >
           <Button type="submit" color="primary" variant="contained">
-            Submit
+            Register
           </Button>
           <Button
             type="submit"
@@ -148,6 +148,18 @@ const RegisterPage: NextPage = () => {
           >
             Reset
           </Button>
+        </Stack>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          justifyContent="flex-start"
+          alignItems="center"
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+          mt={2}
+        >
+          <Button type="submit" color="primary" variant="contained">
+            Iniciar sesion
+          </Button>
+          
         </Stack>
       </form>
     </Container>

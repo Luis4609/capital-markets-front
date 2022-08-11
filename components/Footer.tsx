@@ -1,3 +1,4 @@
+import InstagramIcon from '@mui/icons-material/Instagram';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -33,6 +34,7 @@ const Footer = () => {
               : theme.palette.grey[800],
         }}
       >
+        <InstagramIcon></InstagramIcon>
         <Container maxWidth="sm">
           <Typography variant="body1">
            Company information: About us

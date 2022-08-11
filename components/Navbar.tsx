@@ -17,7 +17,7 @@ const Navbar = () => {
             <Link
               variant="button"
               color="inherit"
-              underline='none'
+              underline="none"
               href="/"
               sx={{ my: 1, mx: 1.5, fontSize: "28px" }}
             >
@@ -33,16 +33,8 @@ const Navbar = () => {
             >
               Converter
             </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Support
-            </Link>
           </nav>
-          <Button href="/login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+          <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
             Login
           </Button>
         </Toolbar>

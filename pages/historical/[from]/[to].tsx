@@ -16,8 +16,9 @@ import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
 
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "../../_app";
+import React from "react";
 import { API_URL } from "../../../utils/urls";
+import { NextPageWithLayout } from "../../_app";
 
 ChartJS.register(
   CategoryScale,
@@ -35,8 +36,10 @@ const HistoricalPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { from, to } = router.query;
 
+  const TO_CURRENCY: string = to?.toString();
+
   useEffect(() => {
-    fetch(`https://${API_URL}/2020-04-01..?amount=1&from=${from}&to=${to}`)
+    fetch(`https://${API_URL}/2020-02-01..?amount=1&from=${from}&to=${to}`)
       .then((resp) => resp.json())
       .then((data) => setHistoricData(data.rates))
       .catch((error) =>
@@ -51,7 +54,7 @@ const HistoricalPage: NextPageWithLayout = () => {
 
   for (const [key, value] of Object.entries(historicData)) {
     labels.push(key);
-    exchangeData.push(value[to]);
+    exchangeData.push(value[TO_CURRENCY]);
   }
 
   const options = {
@@ -79,11 +82,7 @@ const HistoricalPage: NextPageWithLayout = () => {
     ],
   };
 
-  return (
-    <>
-      <Line options={options} data={data} />
-    </>
-  );
+  return <Line options={options} data={data} />;
 };
 
 HistoricalPage.getLayout = function getLayout(page: ReactElement) {

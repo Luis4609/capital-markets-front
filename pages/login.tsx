@@ -9,15 +9,16 @@ import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
 
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import { UserLoginSubmitForm } from "../types/user";
 
-import { validationSchemaLogin } from "../validators/schema";
 import { ReactElement } from "react";
+import { validationSchemaLogin } from "../validators/schema";
+
+import styles from "../styles/Home.module.css";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -36,14 +37,7 @@ const LoginPage: NextPageWithLayout = () => {
   };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <div className={styles.main}>
       <Typography
         variant="h6"
         color="textSecondary"
@@ -80,20 +74,21 @@ const LoginPage: NextPageWithLayout = () => {
           {errors.password?.message}
         </Typography>
 
-        <Stack direction="row" spacing={2}>
+        <Stack direction="column" spacing={2}>
           <Button type="submit" color="primary" variant="contained">
-            Login
+            Continue
           </Button>
+
           <Button
             color="secondary"
             variant="outlined"
             onClick={() => router.push("/register")}
           >
-            Register
+            Create new acount
           </Button>
         </Stack>
       </form>
-    </Container>
+    </div>
   );
 };
 
