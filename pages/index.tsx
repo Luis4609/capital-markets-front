@@ -1,7 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import { NextPageWithLayout } from "./_app";
 
-import { Button } from "@mui/material";
 import CurrencyData from "../components/CurrencyData";
 import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
@@ -9,23 +8,34 @@ import Navbar from "../components/Navbar";
 
 import styles from "../styles/Home.module.css";
 import { API_URL } from "../utils/urls";
+import { Button } from "@mui/material";
 
 const Home: NextPageWithLayout = () => {
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(1); //innitial state = 1
   const [amountOutPut, setAmountOutPut] = useState<number>(0);
 
   const [selected, setSelected] = useState<string>("USD");
   const [selectedOutPut, setSelectedOutPut] = useState<string>("EUR");
 
   useEffect(() => {
+    let isCancelled = false;
+
     fetch(
       `https://${API_URL}/latest?amount=${amount}&from=${selected}&to=${selectedOutPut}`
     )
       .then((resp) => resp.json())
-      .then((data) => setAmountOutPut(data.rates[selectedOutPut]))
+      .then((data) => {
+        if (!isCancelled) {
+          setAmountOutPut(data.rates[selectedOutPut]);
+        }
+      })
       .catch((error) =>
         console.error(`Error to fetch exchange conversion: ${error.message}`)
       );
+
+    return () => {
+      isCancelled = true;
+    };
   }, [amount, selected, selectedOutPut]);
 
   return (
