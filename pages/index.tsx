@@ -1,7 +1,5 @@
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { NextPageWithLayout } from "./_app";
-
-import { Button } from "@mui/material";
 
 import CurrencyData from "../components/CurrencyData";
 import Footer from "../components/Footer";
@@ -10,6 +8,7 @@ import Navbar from "../components/Navbar";
 
 import styles from "../styles/Home.module.css";
 import { API_URL } from "../utils/urls";
+import { Button } from "@mui/material";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState<number>(1); //innitial state = 1
@@ -62,7 +61,7 @@ const Home: NextPageWithLayout = () => {
             selected={selectedOutPut}
             setSelected={setSelectedOutPut}
           />
-          {/* {selected === selectedOutPut ? (
+          {selected === selectedOutPut ? (
             <>
               <p className={styles.errormessage}>
                 You selected the same currency
@@ -78,7 +77,7 @@ const Home: NextPageWithLayout = () => {
             >
               Historical chart
             </Button>
-          )} */}
+          )}
         </div>
       </main>
     </div>
