@@ -1,24 +1,31 @@
 .currencyinput {
   padding: 10px;
   margin: 0 10px;
-  border: 0;
   border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
+  background-color: #faf3f5;
 }
 
-.currencyinput:focus {
+/* .currencyinput:focus {
   background-color: #656465;
-}
+} */
 
 .currencyselect {
   padding: 10px;
-  border: 0;
   border-radius: 10px;
   font-family: inherit;
   font-size: inherit;
+  background-color: #faf3f5;
 }
 
-.currencyselect:focus {
+/* .currencyselect:focus {
   background-color: #656465;
-}
+} */
+
+/* @media (prefers-color-scheme: dark) {
+  .currencyinput,
+  .currencyselect {
+    background-color: #d8d3d4;
+  }
+} */
