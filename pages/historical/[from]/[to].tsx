@@ -6,7 +6,7 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip,
+  Tooltip
 } from "chart.js";
 import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
@@ -16,7 +16,6 @@ import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
 
 import { useRouter } from "next/router";
-import React from "react";
 import { API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
 
@@ -39,12 +38,25 @@ const HistoricalPage: NextPageWithLayout = () => {
   const TO_CURRENCY: string | undefined = to?.toString();
 
   useEffect(() => {
-    fetch(`https://${API_URL}/2020-02-01..?amount=1&from=${from}&to=${to}`)
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    fetch(`https://${API_URL}/2020-02-01..?amount=1&from=${from}&to=${to}`, {
+      signal,
+    })
       .then((resp) => resp.json())
       .then((data) => setHistoricData(data.rates))
-      .catch((error) =>
-        console.error(`Error to fetch exchange conversion: ${error.message}`)
-      );
+      .catch((err) => {
+        if (err.name === "AbortError") {
+          console.log("Cancelled");
+        } else {
+          //todo: handle error message
+        }
+      });
+
+    return () => {
+      controller.abort();
+    };
   }, [from, to]);
 
   //Labels

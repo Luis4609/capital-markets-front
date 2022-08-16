@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { NextPageWithLayout } from "./_app";
 
-import { Button } from "@mui/material";
+import { Button, Stack, Box, TextField } from "@mui/material";
 
 import CurrencyData from "../components/CurrencyData";
 import Footer from "../components/Footer";
@@ -10,8 +10,17 @@ import Navbar from "../components/Navbar";
 
 import styles from "../styles/Home.module.css";
 import { API_URL } from "../utils/urls";
+import { styled } from "@mui/material/styles";
 
-const Home: NextPageWithLayout = () => {
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+
+const Conversor: NextPageWithLayout = () => {
   const [amount, setAmount] = useState<number>(1); //innitial state = 1
   const [amountOutPut, setAmountOutPut] = useState<number>(0);
 
@@ -45,7 +54,7 @@ const Home: NextPageWithLayout = () => {
         <h1 className={styles.title}>Capital Markets Converter</h1>
 
         <div className={styles.converter}>
-          <CurrencyData
+          {/* <CurrencyData
             currencyTypeChange="From"
             disable={false}
             amount={amount}
@@ -62,7 +71,7 @@ const Home: NextPageWithLayout = () => {
             selected={selectedOutPut}
             setSelected={setSelectedOutPut}
           />
-          {/* {selected === selectedOutPut ? (
+          {selected === selectedOutPut ? (
             <>
               <p className={styles.errormessage}>
                 You selected the same currency
@@ -79,13 +88,36 @@ const Home: NextPageWithLayout = () => {
               Historical chart
             </Button>
           )} */}
+
+          <Box sx={{ width: "100%" }}>
+            <Stack spacing={2}>
+              <Item>Item 1</Item>
+              <Item>Item 2</Item>
+              <Item>Item 3</Item>
+
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Select"
+                value={currency}
+                onChange={handleChange}
+                helperText="Please select your currency"
+              >
+                {currencies.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Stack>
+          </Box>
         </div>
       </main>
     </div>
   );
 };
 
-Home.getLayout = function getLayout(page: ReactElement) {
+Conversor.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
       <Navbar></Navbar>
@@ -95,4 +127,4 @@ Home.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export default Home;
+export default Conversor;
