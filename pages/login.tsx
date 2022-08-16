@@ -1,4 +1,4 @@
-import { NextPageWithLayout } from "./_app";
+import { NextPageWithLayout, UserContext } from "./_app";
 
 import { useRouter } from "next/router";
 
@@ -15,13 +15,17 @@ import Typography from "@mui/material/Typography";
 
 import { UserLoginSubmitForm } from "../types/user";
 
-import { ReactElement } from "react";
+import { ReactElement, useContext, useState } from "react";
 import { validationSchemaLogin } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
+
+  const { user, setUser }: any = useContext(UserContext);
+
+  console.log(`User: ${user}`);
 
   const {
     register,
@@ -33,6 +37,7 @@ const LoginPage: NextPageWithLayout = () => {
 
   const onSubmit = (data: UserLoginSubmitForm) => {
     console.log(JSON.stringify(data, null, 2));
+    setUser(JSON.stringify(data, null, 2));
     router.push("/");
   };
 

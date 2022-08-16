@@ -6,9 +6,14 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { useContext } from "react";
+import { UserContext } from "../pages/_app";
 
 const Navbar = () => {
-  // const user = useContext({});
+
+  const {user, }: any = useContext(UserContext);
+
+  console.log(`User: ${user}`)
 
   return (
     <>
@@ -43,16 +48,16 @@ const Navbar = () => {
               Converter
             </Link>
           </nav>
-          {/* {user ? (
-            <Avatar>H</Avatar>
+          {user ? (
+            <Avatar>{user}</Avatar>
           ) : (
             <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Login
             </Button>
-          )} */}
-          <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
+          )}
+          {/* <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
             Login
-          </Button>
+          </Button> */}
         </Toolbar>
       </AppBar>
     </>
