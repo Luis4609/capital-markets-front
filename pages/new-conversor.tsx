@@ -66,21 +66,12 @@ const Conversor: NextPageWithLayout = ({ currencies }) => {
     let isCancelled = false;
 
     fetch(
-      // `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
-     "http://localhost:8080/currencies/converter/?value=1&base=USD&conversion=EUR",
-      // `${API_BACK_CONVERTER}/?value=${amount}&base=${currencyFrom}&conversion=${currencyTo}`,
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-        mode: "no-cors"
-      }
+      `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
     )
       .then((resp) => resp.json())
       .then((data) => {
         if (!isCancelled) {
-          setAmountOutPut(data.value);
-          console.log("DATA CONVERTER API BACK: " + data);
+          setAmountOutPut(data);
         }
       })
       .catch((error) =>
