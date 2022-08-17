@@ -71,7 +71,7 @@ const Conversor: NextPageWithLayout = ({ currencies }) => {
       .then((resp) => resp.json())
       .then((data) => {
         if (!isCancelled) {
-          setAmountOutPut(data);
+          setAmountOutPut(data.rates[currencyTo]);
         }
       })
       .catch((error) =>
