@@ -18,10 +18,7 @@ export const schema = Yup.object().shape({
     .test("Only letters", "Only letters and big than 3 letter", (value) =>
       validateOnlyLetters(value)
     ),
-  // phone: Yup.string()
-  //   .required("Phone is required")
-  //   .test("Phone", "Phone is not valid", (value) => validateInputPhone(value)),
-  email: Yup.string()
+  mail: Yup.string()
     .email("Email is invalid")
     .required("Email is required")
     .test("Email", "accents not allowed", (value) => validateInputEmail(value)),
@@ -41,7 +38,7 @@ export const schema = Yup.object().shape({
 });
 
 export const validationSchemaLogin = Yup.object().shape({
-  email: Yup.string()
+  mail: Yup.string()
     .email("Email is invalid")
     .required("Email is required")
     .test("Email", "accents not allowed", (value) => validateInputEmail(value)),

@@ -21,35 +21,32 @@ import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
 import Navbar from "../components/Navbar";
 
+import type { GetStaticProps } from "next";
 import styles from "../styles/Home.module.css";
-import { API_URL } from "../utils/urls";
+import type { Currency } from "../types/currency";
+import {
+  API_BACK_ALLCURRENCIES,
+  API_URL,
+  API_BACK_CONVERTER,
+} from "../utils/urls";
 
-const currencies = [
-  {
-    value: "USD",
-    label: "$ United State Dolar",
-  },
-  {
-    value: "EUR",
-    label: "€ Euro",
-  },
-  {
-    value: "JPY",
-    label: "¥ Japan Yen",
-  },
-  { value: "GBP", label: "£ British pound" },
-];
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await fetch(API_BACK_ALLCURRENCIES);
+  const currencies: Currency[] = await res.json();
 
-const Conversor: NextPageWithLayout = () => {
-  const [amount, setAmount] = useState<number>(0); //innitial state = 1
-  const [amountOutPut, setAmountOutPut] = useState<number>(0); //innitial state = 1
+  return {
+    props: { currencies }, // will be passed to the page component as props
+  };
+};
+
+const Conversor: NextPageWithLayout = ({ currencies }) => {
+  const [amount, setAmount] = useState<number>(1);
+  const [amountOutPut, setAmountOutPut] = useState<number>(0);
 
   const [currencyFrom, setCurrencyFrom] = useState<string>("USD");
   const [currencyTo, setCurrencyTo] = useState<string>("EUR");
 
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChangeCurrencyFrom = (event: SelectChangeEvent) => {
     setCurrencyFrom(event.target.value as string);
   };
 
@@ -57,16 +54,33 @@ const Conversor: NextPageWithLayout = () => {
     setCurrencyTo(event.target.value as string);
   };
 
+  const handleCurrencyChanges = () => {
+    if (amount !== 0) {
+      setAmount((prev) => prev);
+    }
+    setCurrencyFrom((prev) => currencyTo);
+    setCurrencyTo((prev) => currencyFrom);
+  };
+
   useEffect(() => {
     let isCancelled = false;
 
     fetch(
-      `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
+      // `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
+     "http://localhost:8080/currencies/converter/?value=1&base=USD&conversion=EUR",
+      // `${API_BACK_CONVERTER}/?value=${amount}&base=${currencyFrom}&conversion=${currencyTo}`,
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        mode: "no-cors"
+      }
     )
       .then((resp) => resp.json())
       .then((data) => {
         if (!isCancelled) {
-          setAmountOutPut(data.rates[currencyTo]);
+          setAmountOutPut(data.value);
+          console.log("DATA CONVERTER API BACK: " + data);
         }
       })
       .catch((error) =>
@@ -76,26 +90,7 @@ const Conversor: NextPageWithLayout = () => {
     return () => {
       isCancelled = true;
     };
-  }, [currencyFrom, currencyTo]);
-
-  const handleCurrencyChanges = () => {
-    setAmount(prev => amountOutPut)
-    setCurrencyFrom((prev) => currencyTo);
-    setCurrencyTo((prev) => currencyFrom);
-  };
-
-  const handleSubmit = (event: { preventDefault: () => void } | undefined) => {
-    event?.preventDefault();
-    console.log("Form");
-    fetch(
-      `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
-    )
-      .then((resp) => resp.json())
-      .then((data) => setAmountOutPut(data.rates[currencyTo]))
-      .catch((error) =>
-        console.error(`Error to fetch exchange conversion: ${error.message}`)
-      );
-  };
+  }, [currencyFrom, currencyTo, amount]);
 
   return (
     <div className={styles.container}>
@@ -104,7 +99,7 @@ const Conversor: NextPageWithLayout = () => {
 
         <div className={styles.converter}>
           <Box sx={{ width: "100%" }}>
-            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <form noValidate autoComplete="off">
               <Stack
                 direction={{ xs: "column", sm: "row" }}
                 spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -131,20 +126,20 @@ const Conversor: NextPageWithLayout = () => {
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
+                    id="currency-from"
                     value={currencyFrom}
-                    onChange={handleChange}
+                    onChange={handleChangeCurrencyFrom}
                     label="from"
                   >
-                    {currencies.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {currencies.map((option: Currency) => (
+                      <MenuItem key={option.code} value={option.code}>
+                        {option.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
                 <Avatar
-                  sx={{ bgcolor: blue[500] }}
+                  sx={{ bgcolor: blue[500], alignSelf: "center" }}
                   onClick={() => handleCurrencyChanges()}
                 >
                   <CompareArrowsIcon></CompareArrowsIcon>
@@ -159,14 +154,14 @@ const Conversor: NextPageWithLayout = () => {
                   </InputLabel>
                   <Select
                     labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
+                    id="currency-to"
                     value={currencyTo}
                     onChange={handleChangeCurrencyTo}
                     label="to"
                   >
-                    {currencies.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {currencies.map((option: Currency) => (
+                      <MenuItem key={option.code} value={option.code}>
+                        {option.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -179,19 +174,27 @@ const Conversor: NextPageWithLayout = () => {
                 alignItems="center"
                 sx={{ marginTop: "20px" }}
               >
-                {(amountOutPut !== 0 && currencyFrom !== currencyTo) ? (
+                {currencyFrom !== currencyTo && !Number.isNaN(amount) ? (
                   <Typography variant="h5" color="primary">
                     Exchange: {`${currencyFrom} ${amount} to ${currencyTo} = `}
                     {amountOutPut}
                   </Typography>
                 ) : (
-                  <Typography variant="body1" color="secondary">You selected the same currency</Typography>
+                  <Typography variant="body1" color="secondary">
+                    You selected the same currency or the amount input is
+                    incorrect
+                  </Typography>
                 )}
-                <Button type="submit" variant="contained">
-                  Convert
+                <Button
+                  variant="outlined"
+                  sx={{ marginTop: "15px", marginLeft: "10px" }}
+                  href={`/historical/${encodeURIComponent(
+                    currencyFrom
+                  )}/${encodeURIComponent(currencyTo)}`}
+                >
+                  Historical chart
                 </Button>
               </Stack>
-              
             </form>
           </Box>
         </div>
@@ -211,6 +214,3 @@ Conversor.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default Conversor;
-function handleCurrencyChanges(): void {
-  throw new Error("Function not implemented.");
-}

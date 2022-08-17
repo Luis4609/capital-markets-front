@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 
 import { UserLoginSubmitForm } from "../types/user";
 
-import { ReactElement, useContext, useState } from "react";
+import { ReactElement, useContext } from "react";
 import { validationSchemaLogin } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
@@ -36,8 +36,26 @@ const LoginPage: NextPageWithLayout = () => {
   });
 
   const onSubmit = (data: UserLoginSubmitForm) => {
-    console.log(JSON.stringify(data, null, 2));
+    console.log("JSON FROM: " + JSON.stringify(data, null, 2));
+
     setUser(JSON.stringify(data, null, 2));
+
+    //Request BACK-END ENDPOINT
+    fetch("http://192.168.97.2:8080/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // "Content-Length": "512",
+      },
+      body: JSON.stringify(data, null, 2),
+      credentials: "same-origin",
+      mode: "no-cors",
+      cache: 'no-cache',
+      referrerPolicy: 'no-referrer'
+    })
+      .then((res) => console.log("RESPUESTA DEL POST: " + res))
+      .catch((res) => console.log("FALLO EN LA REQUEST: " + res));
+
     router.push("/");
   };
 
@@ -54,16 +72,16 @@ const LoginPage: NextPageWithLayout = () => {
 
       <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
         <TextField
-          id="email"
+          id="mail"
           label="Email"
           type="email"
           variant="outlined"
           margin="normal"
-          {...register("email")}
-          error={errors.email ? true : false}
+          {...register("mail")}
+          error={errors.mail ? true : false}
         />
         <Typography variant="inherit" color="textSecondary">
-          {errors.email?.message}
+          {errors.mail?.message}
         </Typography>
 
         <TextField
