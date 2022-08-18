@@ -1,12 +1,12 @@
 export type UserLoginSubmitForm = {
-    email: string;
+    mail: string;
     password: string;
   };
   
   export type UserSubmitForm = {
     fullname: string;
     username: string;
-    email: string;
+    mail: string;
     password: string;
     confirmPassword: string;
     acceptTerms: boolean;

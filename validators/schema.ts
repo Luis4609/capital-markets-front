@@ -1,12 +1,10 @@
 import * as Yup from "yup";
 import {
-  validateInputEmail,
-  validateInputPhone,
-  validateOnlyLetters,
-  validatePassword,
+  validateInputEmail, validateOnlyLetters,
+  validatePassword
 } from "../utils/validateInput";
 
-export const schema = Yup.object().shape({
+export const validationSchemaRegister = Yup.object().shape({
   fullname: Yup.string()
     .min(0)
     .required("Full name is required")
@@ -18,10 +16,7 @@ export const schema = Yup.object().shape({
     .test("Only letters", "Only letters and big than 3 letter", (value) =>
       validateOnlyLetters(value)
     ),
-  // phone: Yup.string()
-  //   .required("Phone is required")
-  //   .test("Phone", "Phone is not valid", (value) => validateInputPhone(value)),
-  email: Yup.string()
+  mail: Yup.string()
     .email("Email is invalid")
     .required("Email is required")
     .test("Email", "accents not allowed", (value) => validateInputEmail(value)),
@@ -37,11 +32,11 @@ export const schema = Yup.object().shape({
     [Yup.ref("password"), null],
     "Passwords must match"
   ),
-  acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
+  // acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
 });
 
 export const validationSchemaLogin = Yup.object().shape({
-  email: Yup.string()
+  mail: Yup.string()
     .email("Email is invalid")
     .required("Email is required")
     .test("Email", "accents not allowed", (value) => validateInputEmail(value)),

@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import {
   Button,
   Checkbox,
-  Container,
   FormControl,
   FormControlLabel,
   Stack,
@@ -16,7 +15,7 @@ import {
 } from "@mui/material";
 
 import { UserSubmitForm } from "../types/user";
-import { schema } from "../validators/schema";
+import { validationSchemaRegister } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
 
@@ -29,7 +28,7 @@ const RegisterPage: NextPage = () => {
     reset,
     formState: { errors },
   } = useForm<UserSubmitForm>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(validationSchemaRegister),
   });
 
   const onSubmit = (data: UserSubmitForm) => {
@@ -60,7 +59,11 @@ const RegisterPage: NextPage = () => {
           {...register("fullname")}
           error={errors.fullname ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
+        <Typography
+          variant="inherit"
+          color="textSecondary"
+          sx={{ color: "rgb(240, 87, 87)" }}
+        >
           {errors.fullname?.message}
         </Typography>
 
@@ -74,7 +77,11 @@ const RegisterPage: NextPage = () => {
           error={errors.username ? true : false}
         />
 
-        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
+        <Typography
+          variant="inherit"
+          color="textSecondary"
+          sx={{ color: "rgb(240, 87, 87)" }}
+        >
           {errors.username?.message}
         </Typography>
 
@@ -85,11 +92,15 @@ const RegisterPage: NextPage = () => {
           variant="outlined"
           margin="normal"
           fullWidth
-          {...register("email")}
-          error={errors.email ? true : false}
+          {...register("mail")}
+          error={errors.mail ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
-          {errors.email?.message}
+        <Typography
+          variant="inherit"
+          color="textSecondary"
+          sx={{ color: "rgb(240, 87, 87)" }}
+        >
+          {errors.mail?.message}
         </Typography>
 
         <TextField
@@ -102,7 +113,11 @@ const RegisterPage: NextPage = () => {
           {...register("password")}
           error={errors.password ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
+        <Typography
+          variant="inherit"
+          color="textSecondary"
+          sx={{ color: "rgb(240, 87, 87)" }}
+        >
           {errors.password?.message}
         </Typography>
 
@@ -116,19 +131,12 @@ const RegisterPage: NextPage = () => {
           {...register("confirmPassword")}
           error={errors.confirmPassword ? true : false}
         />
-        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
+        <Typography
+          variant="inherit"
+          color="textSecondary"
+          sx={{ color: "rgb(240, 87, 87)" }}
+        >
           {errors.confirmPassword?.message}
-        </Typography>
-        <FormControl fullWidth>
-          <FormControlLabel
-            control={<Checkbox />}
-            label=" I have read and agree to the Terms"
-            {...label}
-            {...register("acceptTerms")}
-          />
-        </FormControl>
-        <Typography variant="inherit" color="textSecondary" sx={{color: "rgb(240, 87, 87)"}}>
-          {errors.acceptTerms?.message}
         </Typography>
         <Stack
           direction={{ xs: "column", sm: "row" }}
