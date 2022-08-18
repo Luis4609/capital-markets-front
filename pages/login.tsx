@@ -1,21 +1,19 @@
-import { NextPageWithLayout, UserContext } from "./_app";
-
+import { ReactElement, useContext } from "react";
 import { useRouter } from "next/router";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-
-import Footer from "../components/Footer";
-import Layout from "../components/Layout/layout";
 
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
-import { UserLoginSubmitForm } from "../types/user";
+import Footer from "../components/Footer";
+import Layout from "../components/Layout/layout";
 
-import { ReactElement, useContext } from "react";
+import { UserLoginSubmitForm } from "../types/user";
+import { NextPageWithLayout, UserContext } from "./_app";
+
 import { validationSchemaLogin } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
@@ -50,8 +48,8 @@ const LoginPage: NextPageWithLayout = () => {
       body: JSON.stringify(data, null, 2),
       credentials: "same-origin",
       mode: "no-cors",
-      cache: 'no-cache',
-      referrerPolicy: 'no-referrer'
+      cache: "no-cache",
+      referrerPolicy: "no-referrer",
     })
       .then((res) => console.log("RESPUESTA DEL POST: " + res))
       .catch((res) => console.log("FALLO EN LA REQUEST: " + res));
@@ -75,6 +73,7 @@ const LoginPage: NextPageWithLayout = () => {
           id="mail"
           label="Email"
           type="email"
+          fullWidth
           variant="outlined"
           margin="normal"
           {...register("mail")}
@@ -88,6 +87,7 @@ const LoginPage: NextPageWithLayout = () => {
           id="password"
           label="Password"
           type="password"
+          fullWidth
           variant="outlined"
           margin="normal"
           {...register("password")}

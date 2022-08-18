@@ -1,9 +1,6 @@
 import * as React from "react";
-import { Dispatch, SetStateAction } from "react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { TextField } from "@mui/material";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 interface IDateFilter {
   title: string;
@@ -12,24 +9,21 @@ interface IDateFilter {
 }
 
 const DatePicker = ({ title, date, setDate }: IDateFilter) => {
-  const [value, setValue] = React.useState<Date | null>();
-
-  const handleChange = (newValue: Date | null) => {
-    setValue(newValue);
+  const handleFilterDate = (newValue: Date | null) => {
+    setDate(newValue);
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DesktopDatePicker
-        label={title}
-        inputFormat="yyyy/MM/dd"
-        value={date}
-        onChange={handleChange}
-        renderInput={(params: JSX.IntrinsicAttributes) => (
-          <TextField {...params} />
-        )}
-      />
-    </LocalizationProvider>
+    <DesktopDatePicker
+      views={["day", "month", "year"]}
+      label={title}
+      inputFormat="yyyy/MM/dd"
+      value={date}
+      onChange={handleFilterDate}
+      renderInput={(params: JSX.IntrinsicAttributes) => (
+        <TextField {...params} helperText={null} />
+      )}
+    />
   );
 };
 
