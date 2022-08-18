@@ -135,23 +135,27 @@ const HistoricalPage: NextPageWithLayout = () => {
       >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DesktopDatePicker
+            // openTo="year"
+            views={["day", "month", "year"]}
             label="Start Date"
             inputFormat="yyyy/MM/dd"
             value={startDate}
             maxDate={ACTUAL_DATE}
             onChange={handleFilterStartDate}
             renderInput={(params: JSX.IntrinsicAttributes) => (
-              <TextField {...params} />
+              <TextField {...params} helperText={null} />
             )}
           />
           <DesktopDatePicker
+            // openTo="year"
+            views={["day", "month", "year"]}
             label="End Date"
             inputFormat="yyyy/MM/dd"
             value={endDate}
             maxDate={ACTUAL_DATE}
             onChange={handleFilterEndDate}
             renderInput={(params: JSX.IntrinsicAttributes) => (
-              <TextField {...params} />
+              <TextField {...params} helperText={null} />
             )}
           />
         </LocalizationProvider>
