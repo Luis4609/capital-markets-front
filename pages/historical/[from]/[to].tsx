@@ -118,11 +118,9 @@ const HistoricalPage: NextPageWithLayout = () => {
   //Pick dates for the filters
   const handleFilterStartDate = (newValue: any) => {
     setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
-    console.log(`%cNew value start date: ${newValue}`, "color: red;");
   };
   const handleFilterEndDate = (newValue: any) => {
     setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
-    console.log(`%cNew value start date: ${newValue}`, "color: green;");
   };
 
   return (
@@ -159,6 +157,9 @@ const HistoricalPage: NextPageWithLayout = () => {
             )}
           />
         </LocalizationProvider>
+
+                
+
       </Stack>
       <Line options={options} data={data} />
     </>
