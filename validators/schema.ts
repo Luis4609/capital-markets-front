@@ -1,12 +1,10 @@
 import * as Yup from "yup";
 import {
-  validateInputEmail,
-  validateInputPhone,
-  validateOnlyLetters,
-  validatePassword,
+  validateInputEmail, validateOnlyLetters,
+  validatePassword
 } from "../utils/validateInput";
 
-export const schema = Yup.object().shape({
+export const validationSchemaRegister = Yup.object().shape({
   fullname: Yup.string()
     .min(0)
     .required("Full name is required")
@@ -34,7 +32,7 @@ export const schema = Yup.object().shape({
     [Yup.ref("password"), null],
     "Passwords must match"
   ),
-  acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
+  // acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
 });
 
 export const validationSchemaLogin = Yup.object().shape({

@@ -1,10 +1,9 @@
-/** @type {import('next').NextConfig} */
+const { withAxiom } = require("next-axiom");
 
-// next.config.js - wrap your config withAxiom()
-import { withAxiom } from "next-axiom";
-const nextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = withAxiom({
   reactStrictMode: true,
   swcMinify: true,
-};
+});
 
-export default withAxiom({ nextConfig });
+module.exports = nextConfig;

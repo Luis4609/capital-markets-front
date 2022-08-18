@@ -21,37 +21,39 @@ import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
 import Navbar from "../components/Navbar";
 
-import type { GetStaticProps } from "next";
 import styles from "../styles/Home.module.css";
-import type { Currency } from "../types/currency";
-import {
-  API_BACK_ALLCURRENCIES,
-  API_URL,
-  API_BACK_CONVERTER,
-} from "../utils/urls";
 
-export const getStaticProps: GetStaticProps = async () => {
+import { API_BACK_ALLCURRENCIES, API_URL } from "../utils/urls";
+
+export const getStaticProps = async () => {
   const res = await fetch(API_BACK_ALLCURRENCIES);
-  const currencies: Currency[] = await res.json();
+  const currencies = await res.json();
 
   return {
     props: { currencies }, // will be passed to the page component as props
   };
 };
 
-const Conversor: NextPageWithLayout = ({ currencies }) => {
-  const [amount, setAmount] = useState<number>(1);
-  const [amountOutPut, setAmountOutPut] = useState<number>(0);
+const options = [
+  { code: "USD", name: "US Dolar" },
+  { code: "EUR", name: "Euro" },
+  { code: "GBP", name: "British pound" },
+  { code: "JPY", name: "Yen" },
+];
 
-  const [currencyFrom, setCurrencyFrom] = useState<string>("USD");
-  const [currencyTo, setCurrencyTo] = useState<string>("EUR");
+const Conversor = ({ currencies }) => {
+  const [amount, setAmount] = useState < number > 1;
+  const [amountOutPut, setAmountOutPut] = useState < number > 0;
 
-  const handleChangeCurrencyFrom = (event: SelectChangeEvent) => {
-    setCurrencyFrom(event.target.value as string);
+  const [currencyFrom, setCurrencyFrom] = useState < string > "USD";
+  const [currencyTo, setCurrencyTo] = useState < string > "EUR";
+
+  const handleChangeCurrencyFrom = (event) => {
+    setCurrencyFrom(event.target.value);
   };
 
-  const handleChangeCurrencyTo = (event: SelectChangeEvent) => {
-    setCurrencyTo(event.target.value as string);
+  const handleChangeCurrencyTo = (event) => {
+    setCurrencyTo(event.target.value);
   };
 
   const handleCurrencyChanges = () => {
@@ -106,7 +108,6 @@ const Conversor: NextPageWithLayout = ({ currencies }) => {
                     ),
                   }}
                 />
-
                 <FormControl
                   variant="outlined"
                   sx={{ m: 1, width: 200 }}
@@ -122,11 +123,17 @@ const Conversor: NextPageWithLayout = ({ currencies }) => {
                     onChange={handleChangeCurrencyFrom}
                     label="from"
                   >
-                    {currencies.map((option: Currency) => (
-                      <MenuItem key={option.code} value={option.code}>
-                        {option.name}
-                      </MenuItem>
-                    ))}
+                    {currencies
+                      ? currencies.map((option) => (
+                          <MenuItem key={option.code} value={option.code}>
+                            {option.name}
+                          </MenuItem>
+                        ))
+                      : options.map((option) => (
+                          <MenuItem key={option.code} value={option.code}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
                   </Select>
                 </FormControl>
                 <Avatar
@@ -150,11 +157,17 @@ const Conversor: NextPageWithLayout = ({ currencies }) => {
                     onChange={handleChangeCurrencyTo}
                     label="to"
                   >
-                    {currencies.map((option: Currency) => (
-                      <MenuItem key={option.code} value={option.code}>
-                        {option.name}
-                      </MenuItem>
-                    ))}
+                    {currencies
+                      ? currencies.map((option) => (
+                          <MenuItem key={option.code} value={option.code}>
+                            {option.name}
+                          </MenuItem>
+                        ))
+                      : options.map((option) => (
+                          <MenuItem key={option.code} value={option.code}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
                   </Select>
                 </FormControl>
               </Stack>
@@ -194,7 +207,7 @@ const Conversor: NextPageWithLayout = ({ currencies }) => {
   );
 };
 
-Conversor.getLayout = function getLayout(page: ReactElement) {
+Conversor.getLayout = function getLayout(page) {
   return (
     <Layout>
       <Navbar></Navbar>
