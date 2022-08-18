@@ -1,5 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
-import { NextPageWithLayout } from "./_app";
+import { useEffect, useState } from "react";
 
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import {
@@ -11,11 +10,11 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { blue } from "@mui/material/colors";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 
 import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
@@ -41,12 +40,12 @@ const options = [
   { code: "JPY", name: "Yen" },
 ];
 
-const Conversor = ({ currencies }) => {
-  const [amount, setAmount] = useState < number > 1;
-  const [amountOutPut, setAmountOutPut] = useState < number > 0;
+const Conversor = ({currencies}) => {
+  const [amount, setAmount] = useState(1);
+  const [amountOutPut, setAmountOutPut] = useState(0);
 
-  const [currencyFrom, setCurrencyFrom] = useState < string > "USD";
-  const [currencyTo, setCurrencyTo] = useState < string > "EUR";
+  const [currencyFrom, setCurrencyFrom] = useState("USD");
+  const [currencyTo, setCurrencyTo] = useState("EUR");
 
   const handleChangeCurrencyFrom = (event) => {
     setCurrencyFrom(event.target.value);
