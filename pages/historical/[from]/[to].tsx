@@ -6,7 +6,7 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip
+  Tooltip,
 } from "chart.js";
 import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
@@ -14,10 +14,18 @@ import { Line } from "react-chartjs-2";
 import Footer from "../../../components/Footer";
 import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
+// import DatePicker from "../../../components/DatePicker";
 
+import { Stack, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
+import { format, compareAsc } from "date-fns";
 
 ChartJS.register(
   CategoryScale,
@@ -30,7 +38,17 @@ ChartJS.register(
 );
 
 const HistoricalPage: NextPageWithLayout = () => {
+  const ACTUAL_DATE = format(new Date(), "yyyy-MM-dd");
+
   const [historicData, setHistoricData] = useState([]);
+
+  //Date State for the filters
+  const [startDate, setStartDate] = useState<string>(
+    format(new Date(2022, 1, 1), "yyyy-MM-dd")
+  );
+  const [endDate, setEndDate] = useState<string>(
+    format(new Date(2022, 7, 1), "yyyy-MM-dd")
+  );
 
   const router = useRouter();
   const { from, to } = router.query;
@@ -41,9 +59,12 @@ const HistoricalPage: NextPageWithLayout = () => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch(`https://${API_URL}/2020-02-01..?amount=1&from=${from}&to=${to}`, {
-      signal,
-    })
+    fetch(
+      `https://${API_URL}/${startDate}..${endDate}?amount=1&from=${from}&to=${to}`,
+      {
+        signal,
+      }
+    )
       .then((resp) => resp.json())
       .then((data) => setHistoricData(data.rates))
       .catch((err) => {
@@ -57,7 +78,7 @@ const HistoricalPage: NextPageWithLayout = () => {
     return () => {
       controller.abort();
     };
-  }, [from, to]);
+  }, [from, to, startDate, endDate]);
 
   //Labels
   const labels: string[] = [];
@@ -94,7 +115,50 @@ const HistoricalPage: NextPageWithLayout = () => {
     ],
   };
 
-  return <Line options={options} data={data} />;
+  //Pick dates for the filters
+  const handleFilterStartDate = (newValue: any) => {
+    setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    console.log(`%cNew value start date: ${newValue}`, "color: red;");
+  };
+  const handleFilterEndDate = (newValue: any) => {
+    setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    console.log(`%cNew value start date: ${newValue}`, "color: green;");
+  };
+
+  return (
+    <>
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DesktopDatePicker
+            label="Start Date"
+            inputFormat="yyyy/MM/dd"
+            value={startDate}
+            maxDate={ACTUAL_DATE}
+            onChange={handleFilterStartDate}
+            renderInput={(params: JSX.IntrinsicAttributes) => (
+              <TextField {...params} />
+            )}
+          />
+          <DesktopDatePicker
+            label="End Date"
+            inputFormat="yyyy/MM/dd"
+            value={endDate}
+            maxDate={ACTUAL_DATE}
+            onChange={handleFilterEndDate}
+            renderInput={(params: JSX.IntrinsicAttributes) => (
+              <TextField {...params} />
+            )}
+          />
+        </LocalizationProvider>
+      </Stack>
+      <Line options={options} data={data} />
+    </>
+  );
 };
 
 HistoricalPage.getLayout = function getLayout(page: ReactElement) {

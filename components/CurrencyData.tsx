@@ -24,6 +24,7 @@ const CurrencyData = ({
   selected,
   setSelected,
 }: CurrencyProps) => {
+  
   //manejador para recoger la selección de divisa de origen
   const handleChange = (e: { target: { value: any } }) => {
     setSelected(e.target.value);
