@@ -189,8 +189,8 @@ const Conversor = () => {
               >
                 {currencyFrom !== currencyTo && !Number.isNaN(amount) ? (
                   <Typography variant="h5" color="primary">
-                    Exchange: {`${currencyFrom} ${amount} to ${currencyTo} = `}
-                    {amountOutPut}
+                    Exchange: {`${currencyFrom} ${Intl.NumberFormat('de-DE', { style: 'currency', currency: currencyFrom }).format(amount)} to ${currencyTo} = `}
+                    {Intl.NumberFormat('de-DE', { style: 'currency', currency: currencyTo }).format(amountOutPut)}
                   </Typography>
                 ) : (
                   <Typography variant="body1" color="secondary">
