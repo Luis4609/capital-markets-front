@@ -10,7 +10,7 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { blue } from "@mui/material/colors";
@@ -24,14 +24,14 @@ import styles from "../styles/Home.module.css";
 
 import { API_BACK_ALLCURRENCIES, API_URL } from "../utils/urls";
 
-export const getStaticProps = async () => {
-  const res = await fetch(API_BACK_ALLCURRENCIES);
-  const currencies = await res.json();
+// export const getStaticProps = async () => {
+//   const res = await fetch(API_BACK_ALLCURRENCIES);
+//   const currencies = await res.json();
 
-  return {
-    props: { currencies }, // will be passed to the page component as props
-  };
-};
+//   return {
+//     props: { currencies }, // will be passed to the page component as props
+//   };
+// };
 
 const options = [
   { code: "USD", name: "US Dolar" },
@@ -40,7 +40,7 @@ const options = [
   { code: "JPY", name: "Yen" },
 ];
 
-const Conversor = ({currencies}) => {
+const Conversor = () => {
   const [amount, setAmount] = useState(1);
   const [amountOutPut, setAmountOutPut] = useState(0);
 
@@ -122,7 +122,7 @@ const Conversor = ({currencies}) => {
                     onChange={handleChangeCurrencyFrom}
                     label="from"
                   >
-                    {currencies
+                    {/* {currencies
                       ? currencies.map((option) => (
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
@@ -132,7 +132,12 @@ const Conversor = ({currencies}) => {
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
                           </MenuItem>
-                        ))}
+                        ))} */}
+                    {options.map((option) => (
+                      <MenuItem key={option.code} value={option.code}>
+                        {option.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <Avatar
@@ -156,7 +161,7 @@ const Conversor = ({currencies}) => {
                     onChange={handleChangeCurrencyTo}
                     label="to"
                   >
-                    {currencies
+                    {/* {currencies
                       ? currencies.map((option) => (
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
@@ -166,7 +171,12 @@ const Conversor = ({currencies}) => {
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
                           </MenuItem>
-                        ))}
+                        ))} */}
+                    {options.map((option) => (
+                      <MenuItem key={option.code} value={option.code}>
+                        {option.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Stack>
