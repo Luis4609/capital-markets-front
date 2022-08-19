@@ -6,9 +6,10 @@ interface IDateFilter {
   title: string;
   date: string;
   setDate: any;
+  actualDate: Date;
 }
 
-const DatePicker = ({ title, date, setDate }: IDateFilter) => {
+const DatePicker = ({ title, date, setDate, actualDate }: IDateFilter) => {
   const handleFilterDate = (newValue: Date | null) => {
     setDate(newValue);
   };
@@ -19,6 +20,7 @@ const DatePicker = ({ title, date, setDate }: IDateFilter) => {
       label={title}
       inputFormat="yyyy/MM/dd"
       value={date}
+      maxDate={actualDate}
       onChange={handleFilterDate}
       renderInput={(params: JSX.IntrinsicAttributes) => (
         <TextField {...params} helperText={null} />

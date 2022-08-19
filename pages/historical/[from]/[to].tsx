@@ -16,7 +16,7 @@ import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
 // import DatePicker from "../../../components/DatePicker";
 
-import { Stack, TextField } from "@mui/material";
+import { Container, Stack, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
@@ -26,6 +26,8 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import { format, compareAsc } from "date-fns";
+
+import { options } from "../../../utils/chart";
 
 ChartJS.register(
   CategoryScale,
@@ -72,6 +74,7 @@ const HistoricalPage: NextPageWithLayout = () => {
           console.log("Cancelled");
         } else {
           //todo: handle error message
+          return <p>Mensaje de console.erro</p>;
         }
       });
 
@@ -90,19 +93,6 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "Currency Data",
-      },
-    },
-  };
-
   const data = {
     labels,
     datasets: [
@@ -116,6 +106,7 @@ const HistoricalPage: NextPageWithLayout = () => {
   };
 
   //Pick dates for the filters
+  //! Fix newValue types
   const handleFilterStartDate = (newValue: any) => {
     setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
   };
@@ -124,7 +115,7 @@ const HistoricalPage: NextPageWithLayout = () => {
   };
 
   return (
-    <>
+    <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
       <Stack
         direction="row"
         spacing={2}
@@ -157,12 +148,9 @@ const HistoricalPage: NextPageWithLayout = () => {
             )}
           />
         </LocalizationProvider>
-
-                
-
       </Stack>
       <Line options={options} data={data} />
-    </>
+    </Container>
   );
 };
 
