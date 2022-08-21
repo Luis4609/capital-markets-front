@@ -24,6 +24,7 @@ import styles from "../styles/Home.module.css";
 
 import { API_BACK_ALLCURRENCIES, API_URL } from "../utils/urls";
 
+import { currencies } from "../utils/currencies";
 // export const getStaticProps = async () => {
 //   const res = await fetch(API_BACK_ALLCURRENCIES);
 //   const currencies = await res.json();
@@ -122,7 +123,7 @@ const Conversor = () => {
                     onChange={handleChangeCurrencyFrom}
                     label="from"
                   >
-                    {/* {currencies
+                    {currencies
                       ? currencies.map((option) => (
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
@@ -132,12 +133,12 @@ const Conversor = () => {
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
                           </MenuItem>
-                        ))} */}
-                    {options.map((option) => (
+                        ))}
+                    {/* {options.map((option) => (
                       <MenuItem key={option.code} value={option.code}>
                         {option.name}
                       </MenuItem>
-                    ))}
+                    ))} */}
                   </Select>
                 </FormControl>
                 <Avatar
@@ -161,7 +162,7 @@ const Conversor = () => {
                     onChange={handleChangeCurrencyTo}
                     label="to"
                   >
-                    {/* {currencies
+                    {currencies
                       ? currencies.map((option) => (
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
@@ -171,12 +172,12 @@ const Conversor = () => {
                           <MenuItem key={option.code} value={option.code}>
                             {option.name}
                           </MenuItem>
-                        ))} */}
-                    {options.map((option) => (
+                        ))}
+                    {/* {options.map((option) => (
                       <MenuItem key={option.code} value={option.code}>
                         {option.name}
                       </MenuItem>
-                    ))}
+                    ))} */}
                   </Select>
                 </FormControl>
               </Stack>

@@ -25,7 +25,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-import { format, compareAsc } from "date-fns";
+import { format, compareAsc, parseISO } from "date-fns";
 
 import { options } from "../../../utils/chart";
 
