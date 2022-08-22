@@ -6,29 +6,29 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip
+  Tooltip,
 } from "chart.js";
 import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { format } from "date-fns";
 
+//Import components
 import Footer from "../../../components/Footer";
 import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
-// import DatePicker from "../../../components/DatePicker";
+import CurrencyInput from "../../../components/CurrencyInput";
+import DatePicker from "../../../components/DatePicker";
 
+//Components from MUI
 import { Container, Stack, Typography } from "@mui/material";
-import { useRouter } from "next/router";
-import { API_URL } from "../../../utils/urls";
-import { NextPageWithLayout } from "../../_app";
-
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-import { format } from "date-fns";
+import { useRouter } from "next/router";
 
+import { API_URL } from "../../../utils/urls";
+import { NextPageWithLayout } from "../../_app";
 import { UrlObject } from "url";
-import CurrencyInput from "../../../components/CurrencyInput";
-import DatePicker from "../../../components/DatePicker";
 import { options } from "../../../utils/chart";
 
 ChartJS.register(
@@ -135,6 +135,8 @@ const HistoricalPage: NextPageWithLayout = () => {
     router.push(`/historical/${from}/${event.target.value}`);
   };
 
+  console.log("TO_CURRENCY ACTUAL VALOR : ", TO_CURRENCY);
+
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
       <Stack
@@ -167,7 +169,17 @@ const HistoricalPage: NextPageWithLayout = () => {
         ></CurrencyInput>
 
         <Typography variant="h5" color="primary">
-          Currenct exchange: {exchangeData ? exchangeData.at(-1)?.toFixed(3) : (<p>Loading...</p>)}
+          {((from !== to) && (TO_CURRENCY?.match(/[A-Z]/)) ||
+          FROM_CURRENCY?.match(/[A-Z]/)) ? (
+            <Typography variant="h5" color="primary">
+              {" "}
+              Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
+            </Typography>
+          ) : (
+            <Typography variant="body1" color="secondary">
+              You selected the same currency or the input is incorrect
+            </Typography>
+          )}
         </Typography>
       </Stack>
       <Line options={options} data={data} />
