@@ -10,10 +10,9 @@ import { useContext } from "react";
 import { UserContext } from "../pages/_app";
 
 const Navbar = () => {
+  const { user }: any = useContext(UserContext);
 
-  const {user, }: any = useContext(UserContext);
-
-  console.log(`User: ${user}`)
+  console.log(`User: ${user}`);
 
   return (
     <>
@@ -47,6 +46,14 @@ const Navbar = () => {
             >
               Converter
             </Link>
+            <Link
+              variant="button"
+              color="text.primary"
+              href="/historical/USD/EUR"
+              sx={{ my: 1, mx: 1.5 }}
+            >
+              Historical
+            </Link>
           </nav>
           {user ? (
             <Avatar>{user}</Avatar>
@@ -55,9 +62,6 @@ const Navbar = () => {
               Login
             </Button>
           )}
-          {/* <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
-            Login
-          </Button> */}
         </Toolbar>
       </AppBar>
     </>

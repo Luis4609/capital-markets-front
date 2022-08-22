@@ -4,17 +4,13 @@ import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import {
   Box,
   Button,
-  FormControl,
   InputAdornment,
-  InputLabel,
-  MenuItem,
   Stack,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { blue } from "@mui/material/colors";
-import Select from "@mui/material/Select";
 
 import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
@@ -24,19 +20,10 @@ import styles from "../styles/Home.module.css";
 
 import { API_URL } from "../utils/urls";
 
-import { currencies } from "../utils/currencies";
 import { NextPageWithLayout } from "./_app";
 
 import toast, { Toaster } from "react-hot-toast";
-
-// export const getStaticProps = async () => {
-//   const res = await fetch(API_BACK_ALLCURRENCIES);
-//   const currencies = await res.json();
-
-//   return {
-//     props: { currencies }, // will be passed to the page component as props
-//   };
-// };
+import CurrencyInput from "../components/CurrencyInput";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -102,7 +89,7 @@ const Home: NextPageWithLayout = () => {
           <form noValidate autoComplete="off">
             <Stack
               direction={{ xs: "column", sm: "row" }}
-              spacing={{ xs: 1, sm: 2, md: 4 }}
+              spacing={{ xs: 2, sm: 3, md: 4 }}
             >
               <TextField
                 id="amount"
@@ -115,28 +102,12 @@ const Home: NextPageWithLayout = () => {
                   ),
                 }}
               />
-              <FormControl
-                variant="outlined"
-                sx={{ m: 1, width: 200 }}
-                size="medium"
-              >
-                <InputLabel id="demo-simple-select-standard-label">
-                  From
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="currency-from"
-                  value={currencyFrom}
-                  onChange={handleChangeCurrencyFrom}
-                  label="from"
-                >
-                  {currencies.map((option) => (
-                    <MenuItem key={option.code} value={option.code}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <CurrencyInput
+                label="From"
+                currency={currencyFrom}
+                handleCurrencyChange={handleChangeCurrencyFrom}
+              ></CurrencyInput>
+
               <Avatar
                 sx={{ bgcolor: blue[500], alignSelf: "center" }}
                 onClick={() => handleCurrencyChanges()}
@@ -144,28 +115,11 @@ const Home: NextPageWithLayout = () => {
                 <CompareArrowsIcon></CompareArrowsIcon>
               </Avatar>
               <Toaster></Toaster>
-              <FormControl
-                variant="outlined"
-                sx={{ m: 1, width: 200 }}
-                size="medium"
-              >
-                <InputLabel id="demo-simple-select-standard-label">
-                  To
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="currency-to"
-                  value={currencyTo}
-                  onChange={handleChangeCurrencyTo}
-                  label="to"
-                >
-                  {currencies.map((option) => (
-                    <MenuItem key={option.code} value={option.code}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <CurrencyInput
+                label="To"
+                currency={currencyTo}
+                handleCurrencyChange={handleChangeCurrencyTo}
+              ></CurrencyInput>
             </Stack>
             <Stack
               direction={{ xs: "column", sm: "row" }}
