@@ -1,13 +1,18 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { createContext, ReactElement, ReactNode, useMemo, useState } from "react";
 import type { NextPage } from "next";
+import {
+  createContext,
+  ReactElement,
+  ReactNode,
+  useMemo,
+  useState,
+} from "react";
 
-import { log } from 'next-axiom'
+import { log } from "next-axiom";
+export { reportWebVitals } from "next-axiom";
 
-export { reportWebVitals } from 'next-axiom'
-
-log.info('Hello from frontend', { foo: 'bar' })
+log.info("Hello from frontend", { foo: "bar" });
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -23,16 +28,12 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  
   const [user, setUser] = useState({
     email: "",
-    password: ''
+    password: "",
   });
 
-  const value = useMemo(
-    () => ({ user, setUser }), 
-    [user]
-  );
+  const value = useMemo(() => ({ user, setUser }), [user]);
 
   return getLayout(
     <UserContext.Provider value={value}>
