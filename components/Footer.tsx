@@ -6,13 +6,13 @@ import Typography from "@mui/material/Typography";
 
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
-import FacebookSharpIcon from '@mui/icons-material/FacebookSharp';
+import FacebookSharpIcon from "@mui/icons-material/FacebookSharp";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary">
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="/">
         Capital Markets
       </Link>{" "}
       {new Date().getFullYear()}
@@ -37,9 +37,15 @@ const Footer = () => {
               : theme.palette.grey[800],
         }}
       >
-        <InstagramIcon></InstagramIcon>
-        <TwitterIcon></TwitterIcon>
-        <FacebookSharpIcon></FacebookSharpIcon>
+        <Link color="inherit" href="https://www.instagram.com/">
+          <InstagramIcon></InstagramIcon>
+        </Link>
+        <Link color="inherit" href="https://twitter.com/?lang=en">
+          <TwitterIcon></TwitterIcon>
+        </Link>{" "}
+        <Link color="inherit" href="https://www.facebook.com/">
+          <FacebookSharpIcon></FacebookSharpIcon>
+        </Link>
         <Container maxWidth="sm">
           <Typography variant="body1">Company information: About us</Typography>
           <Copyright />

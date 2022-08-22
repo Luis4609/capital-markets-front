@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import { Container } from "@mui/system";
 
 import { red } from "@mui/material/colors";
+import Link from "next/link";
 
 const Error = ({ statusCode }) => {
   return (
@@ -11,9 +12,12 @@ const Error = ({ statusCode }) => {
           An error {statusCode} ocurred on the server
         </Typography>
       ) : (
-        <Typography variant="h5" sx={{ color: red[500] }}>
-          An error occurred on the client
-        </Typography>
+        <>
+          <Typography variant="h5" sx={{ color: red[500] }}>
+            An error occurred on the client
+          </Typography>
+          <Link to="/">Go back</Link>
+        </>
       )}
     </Container>
   );
