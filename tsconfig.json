@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Layout/layout.js", "pages/new-conversor.jsx", "pages/api/currencies.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Layout/layout.js", "pages/new-conversor.jsx", "pages/api/currencies.js", "pages/translate.jsx"],
   "exclude": ["node_modules"]
 }

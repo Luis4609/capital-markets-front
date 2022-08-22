@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-
+import { NextIntlProvider } from "next-intl";
 import { log } from "next-axiom";
 export { reportWebVitals } from "next-axiom";
 
@@ -36,8 +36,23 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const value = useMemo(() => ({ user, setUser }), [user]);
 
   return getLayout(
-    <UserContext.Provider value={value}>
-      <Component {...pageProps} />
-    </UserContext.Provider>
+    <NextIntlProvider
+      formats={{
+        dateTime: {
+          short: {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          },
+        },
+      }}
+      messages={pageProps.messages}
+      now={new Date(pageProps.now)}
+      timeZone="Austria/Vienna"
+    >
+      <UserContext.Provider value={value}>
+        <Component {...pageProps} />
+      </UserContext.Provider>
+    </NextIntlProvider>
   );
 }

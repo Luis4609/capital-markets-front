@@ -1,0 +1,11 @@
+{
+    "Converter": {
+        "title": "Capital Markets Converter",
+        "historicalLink": "Historical Charts",
+        "labels": {
+            "amount": "Amount",
+            "fromCurrency": "From",
+            "toCurrency": "To"
+        }
+    }
+}

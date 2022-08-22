@@ -1,0 +1,8 @@
+{
+    "Navbar": {
+        "title": "Capital Markets Converter",
+        "converter": "Converter",
+        "historical": "Historical",
+        "login": "Login"
+    }
+}

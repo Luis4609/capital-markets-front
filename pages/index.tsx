@@ -107,7 +107,6 @@ const Home: NextPageWithLayout = () => {
                 currency={currencyFrom}
                 handleCurrencyChange={handleChangeCurrencyFrom}
               ></CurrencyInput>
-
               <Avatar
                 sx={{ bgcolor: blue[500], alignSelf: "center" }}
                 onClick={() => handleCurrencyChanges()}
