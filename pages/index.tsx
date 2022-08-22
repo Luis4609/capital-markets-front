@@ -7,7 +7,7 @@ import {
   InputAdornment,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { blue } from "@mui/material/colors";
@@ -45,9 +45,6 @@ const Home: NextPageWithLayout = () => {
   };
 
   const handleCurrencyChanges = () => {
-    // if (amount !== 0) {
-    //   setAmount((prev) => prev);
-    // }
     if (currencyFrom === currencyTo) {
       toast.error("Same currencies!!!. Please check");
     } else {
@@ -71,7 +68,7 @@ const Home: NextPageWithLayout = () => {
         }
       })
       .catch((error) => {
-        console.error(`Error to fetch exchange conversion: ${error.message}`);
+        console.log(`Error to fetch exchange conversion: ${error.message}`);
         toast.error("Bad conversion inputs!");
       });
 

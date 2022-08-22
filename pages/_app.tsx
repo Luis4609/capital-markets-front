@@ -10,6 +10,7 @@ import {
 } from "react";
 
 import { log } from "next-axiom";
+import { AuthProvider } from "../context/AuthUserContext";
 export { reportWebVitals } from "next-axiom";
 
 log.info("Hello from frontend", { foo: "bar" });
@@ -25,19 +26,18 @@ type AppPropsWithLayout = AppProps & {
 export const UserContext = createContext({});
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
+  const [user, setUser] = useState();
 
-  const value = useMemo(() => ({ user, setUser }), [user]);
+  // const value = useMemo(() => ({ user, setUser }), [user]);
 
   return getLayout(
-    <UserContext.Provider value={value}>
+    // <UserContext.Provider value={{user, setUser}}>
+    //   <Component {...pageProps} />
+    // </UserContext.Provider>
+    <AuthProvider>
       <Component {...pageProps} />
-    </UserContext.Provider>
+    </AuthProvider>
   );
 }

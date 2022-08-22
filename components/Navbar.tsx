@@ -7,11 +7,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useContext } from "react";
+import { useAuth } from "../context/AuthUserContext";
 import { UserContext } from "../pages/_app";
 
 const Navbar = () => {
-  const { user }: any = useContext(UserContext);
+  // const { user, setUser }: any = useContext(UserContext);
 
+  const { user, logout } = useAuth();
+  
   console.log(`User: ${user}`);
 
   return (
