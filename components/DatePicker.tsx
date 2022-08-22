@@ -1,27 +1,24 @@
-import * as React from "react";
 import { TextField } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { format } from "date-fns";
 
 interface IDateFilter {
-  title: string;
+  label: string;
   date: string;
-  setDate: any;
-  actualDate: Date;
+  handleDateChange: any;
 }
 
-const DatePicker = ({ title, date, setDate, actualDate }: IDateFilter) => {
-  const handleFilterDate = (newValue: Date | null) => {
-    setDate(newValue);
-  };
+const DatePicker = ({ label, date, handleDateChange }: IDateFilter) => {
+  const ACTUAL_DATE = format(new Date(), "yyyy-MM-dd");
 
   return (
     <DesktopDatePicker
       views={["day", "month", "year"]}
-      label={title}
+      label={label}
       inputFormat="yyyy/MM/dd"
       value={date}
-      maxDate={actualDate}
-      onChange={handleFilterDate}
+      maxDate={ACTUAL_DATE}
+      onChange={handleDateChange}
       renderInput={(params: JSX.IntrinsicAttributes) => (
         <TextField {...params} helperText={null} />
       )}

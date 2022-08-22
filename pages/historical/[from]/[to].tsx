@@ -10,23 +10,25 @@ import {
 } from "chart.js";
 import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
+import { format } from "date-fns";
 
+//Import components
 import Footer from "../../../components/Footer";
 import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
-// import DatePicker from "../../../components/DatePicker";
+import CurrencyInput from "../../../components/CurrencyInput";
+import DatePicker from "../../../components/DatePicker";
 
-import { Container, Stack, TextField } from "@mui/material";
-import { useRouter } from "next/router";
-import { API_URL } from "../../../utils/urls";
-import { NextPageWithLayout } from "../../_app";
-
+//Components from MUI
+import { Container, Stack, Typography } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
-import { format, compareAsc } from "date-fns";
+import { useRouter } from "next/router";
 
+import { API_URL } from "../../../utils/urls";
+import { NextPageWithLayout } from "../../_app";
+import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
 
 ChartJS.register(
@@ -39,8 +41,18 @@ ChartJS.register(
   Legend
 );
 
+interface useFetchHistoricProps {
+  from: string | string[] | undefined;
+  to: string | string[] | undefined;
+}
+
 const HistoricalPage: NextPageWithLayout = () => {
-  const ACTUAL_DATE = format(new Date(), "yyyy-MM-dd");
+  const router = useRouter();
+  const { from, to } = router.query;
+
+  /* eslint-disable-next-line */
+  const FROM_CURRENCY: string | undefined = from?.toString();
+  const TO_CURRENCY: string | undefined = to?.toString();
 
   const [historicData, setHistoricData] = useState([]);
 
@@ -49,13 +61,8 @@ const HistoricalPage: NextPageWithLayout = () => {
     format(new Date(2022, 1, 1), "yyyy-MM-dd")
   );
   const [endDate, setEndDate] = useState<string>(
-    format(new Date(2022, 7, 1), "yyyy-MM-dd")
+    format(new Date(2022, 7, 15), "yyyy-MM-dd")
   );
-
-  const router = useRouter();
-  const { from, to } = router.query;
-  /* eslint-disable-next-line */
-  const TO_CURRENCY: string | undefined = to?.toString();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,8 +80,7 @@ const HistoricalPage: NextPageWithLayout = () => {
         if (err.name === "AbortError") {
           console.log("Cancelled");
         } else {
-          //todo: handle error message
-          return <p>Mensaje de console.erro</p>;
+          console.log("Bad fetch: ", err.message)
         }
       });
 
@@ -93,6 +99,7 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
+  console.log("Change to: ", to)
   const data = {
     labels,
     datasets: [
@@ -114,42 +121,81 @@ const HistoricalPage: NextPageWithLayout = () => {
     setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
   };
 
+  const handleChangeCurrencyFrom = (event: {
+    target: { value: string | UrlObject };
+  }) => {
+    router.push(`/historical/${event.target.value}/${to}`);
+  };
+
+  const handleChangeCurrencyTo = (event: {
+    target: { value: string | UrlObject };
+  }) => {
+    router.push(`/historical/${from}/${event.target.value}`);
+  };
+
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
       <Stack
-        direction="row"
+        direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="center"
         alignItems="center"
       >
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DesktopDatePicker
-            // openTo="year"
-            views={["day", "month", "year"]}
+          <DatePicker
             label="Start Date"
-            inputFormat="yyyy/MM/dd"
-            value={startDate}
-            maxDate={ACTUAL_DATE}
-            onChange={handleFilterStartDate}
-            renderInput={(params: JSX.IntrinsicAttributes) => (
-              <TextField {...params} helperText={null} />
-            )}
-          />
-          <DesktopDatePicker
-            // openTo="year"
-            views={["day", "month", "year"]}
+            date={startDate}
+            handleDateChange={handleFilterStartDate}
+          ></DatePicker>
+          <DatePicker
             label="End Date"
-            inputFormat="yyyy/MM/dd"
-            value={endDate}
-            maxDate={ACTUAL_DATE}
-            onChange={handleFilterEndDate}
-            renderInput={(params: JSX.IntrinsicAttributes) => (
-              <TextField {...params} helperText={null} />
-            )}
-          />
+            date={endDate}
+            handleDateChange={handleFilterEndDate}
+          ></DatePicker>
         </LocalizationProvider>
+        <CurrencyInput
+          label="From"
+          currency={FROM_CURRENCY || ""}
+          handleCurrencyChange={handleChangeCurrencyFrom}
+        ></CurrencyInput>
+        <CurrencyInput
+          label="TO"
+          currency={TO_CURRENCY || ""}
+          handleCurrencyChange={handleChangeCurrencyTo}
+        ></CurrencyInput>
+
+        <Typography variant="h5" color="primary">
+          {from !== to ? (
+            <Typography variant="h5" color="primary">
+              {" "}
+              Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
+            </Typography>
+          ) : (
+            <Typography variant="body1" color="secondary">
+              You selected the same currency or the input is incorrect
+            </Typography>
+          )}
+        </Typography>
       </Stack>
       <Line options={options} data={data} />
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        justifyContent="flex-end"
+        alignItems="center"
+        mt={4}
+      >
+        {/* <Button variant="contained" color="error" onClick={handleDownloadPdf}>
+          Download pdf
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleDownloadExcel}
+        >
+          Download excel
+        </Button> */}
+      </Stack>
     </Container>
   );
 };
