@@ -80,8 +80,7 @@ const HistoricalPage: NextPageWithLayout = () => {
         if (err.name === "AbortError") {
           console.log("Cancelled");
         } else {
-          //todo: handle error message
-          return <p>Mensaje de error</p>;
+          console.log("Bad fetch: ", err.message)
         }
       });
 
@@ -100,8 +99,7 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
-  console.info("Ultimo label: ", exchangeData.at(-1)?.toString());
-
+  console.log("Change to: ", to)
   const data = {
     labels,
     datasets: [
