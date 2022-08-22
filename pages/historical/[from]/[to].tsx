@@ -135,8 +135,6 @@ const HistoricalPage: NextPageWithLayout = () => {
     router.push(`/historical/${from}/${event.target.value}`);
   };
 
-  console.log("TO_CURRENCY ACTUAL VALOR : ", TO_CURRENCY);
-
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
       <Stack
@@ -169,8 +167,7 @@ const HistoricalPage: NextPageWithLayout = () => {
         ></CurrencyInput>
 
         <Typography variant="h5" color="primary">
-          {((from !== to) && (TO_CURRENCY?.match(/[A-Z]/)) ||
-          FROM_CURRENCY?.match(/[A-Z]/)) ? (
+          {from !== to ? (
             <Typography variant="h5" color="primary">
               {" "}
               Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
