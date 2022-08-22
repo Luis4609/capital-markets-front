@@ -6,4 +6,10 @@ const nextConfig = withAxiom({
   swcMinify: true,
 });
 
-module.exports = nextConfig;
+module.exports = {
+  nextConfig,
+  i18n: {
+    locales: ["en", "es"],
+    defaultLocale: "en",
+  },
+};
