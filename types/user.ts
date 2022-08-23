@@ -3,18 +3,26 @@ export type UserLoginSubmitForm = {
   password: string;
 };
 
+// export type UserSubmitForm = {
+//   fullname: string;
+//   username: string;
+//   mail: string;
+//   password: string;
+//   confirmPassword: string;
+//   acceptTerms: boolean;
+// };
+
 export type UserSubmitForm = {
-  fullname: string;
-  username: string;
+  name: string;
+  surname: string;
+  dni: string;
   mail: string;
   password: string;
   confirmPassword: string;
-  acceptTerms: boolean;
 };
 
 export type AuthContextType = {
-  user: boolean;
-  login: () => void;
-  register: () => void;
-  logout: () => void;
+  mail: string,
+  password: string;
+  isLogging: boolean;
 };

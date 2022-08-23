@@ -1,6 +1,6 @@
-import { ReactElement, useContext } from "react";
-import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
+import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
@@ -12,21 +12,15 @@ import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
 
 import { UserLoginSubmitForm } from "../types/user";
-import { NextPageWithLayout, UserContext } from "./_app";
+import { NextPageWithLayout } from "./_app";
 
 import { validationSchemaLogin } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
-import { BACK_URL } from "../utils/urls";
-import { useAuth } from "../context/AuthUserContext";
+import { API_BACK_LOGIN } from "../utils/urls";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
-
-  // const { user, setUser }: any = useContext(UserContext);
-  const { user, login } = useAuth();
-
-  console.log(`User: ${user}`);
 
   const {
     register,
@@ -36,23 +30,22 @@ const LoginPage: NextPageWithLayout = () => {
     resolver: yupResolver(validationSchemaLogin),
   });
 
-  const onSubmit = async (data: UserLoginSubmitForm) => {
+  const onSubmit = (data: UserLoginSubmitForm) => {
     console.log("JSON FROM: " + JSON.stringify(data, null, 2));
 
     // setUser(JSON.stringify(data, null, 2));
-    login();
 
     //Request BACK-END ENDPOINT
-    fetch(`${BACK_URL}/user/login`, {
+    fetch(API_BACK_LOGIN, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => console.log("RESPUESTA DEL POST: ", res.json()))
-      .then((data) => console.log("RESPUESTA DEL POST: ", data))
-      .catch((res) => console.log("FALLO EN LA REQUEST: ", res.message));
+      .then((res) => res.json())
+      .then((data) => console.log("RESPUESTA DEL POST2: ", data))
+      .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
 
     router.push("/");
   };

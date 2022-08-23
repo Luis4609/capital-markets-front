@@ -14,7 +14,7 @@ const Navbar = () => {
   // const { user, setUser }: any = useContext(UserContext);
 
   const { user, logout } = useAuth();
-  
+
   console.log(`User: ${user}`);
 
   return (

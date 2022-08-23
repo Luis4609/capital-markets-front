@@ -8,10 +8,9 @@ import type { AuthContextType } from "../types/user";
 // export default AuthUserContext;
 
 const authContextDefaultValues: AuthContextType = {
-  user: false,
-  login: () => {},
-  register: () => {},
-  logout: () => {},
+  mail: "",
+  password: "",
+  isLogging: false,
 };
 
 const AuthContext = createContext<AuthContextType>(authContextDefaultValues);
@@ -25,25 +24,15 @@ type Props = {
 };
 
 export function AuthProvider({ children }: Props) {
-  const [user, setUser] = useState(false);
-
-  const login = () => {
-    setUser(true);
-  };
-
-  const register = (data: any) => {
-    setUser(data);
-  };
-
-  const logout = (data: any) => {
-    setUser(data);
-  };
+  const [user, setUser] = useState({
+    mail: "",
+    password: "",
+    isLogging: false,
+  });
 
   const value = {
     user,
-    login,
-    register,
-    logout,
+    setUser,
   };
 
   return (

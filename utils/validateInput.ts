@@ -25,3 +25,11 @@ export const validateInputPhone = (value: string | undefined): boolean => {
 
   return /\(\d{2}\) (\d{4,5})-\d{4}/.test(value);
 };
+
+export const validateInputDni = (value: string | undefined): boolean => {
+  if (value === undefined) return false;
+
+  return /^[0-9]{8,8}[A-Za-z]$/.test(value);
+};
+
+// const isUndefined = (val: any) => val === undefined
