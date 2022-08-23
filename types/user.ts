@@ -21,7 +21,7 @@ export type UserSubmitForm = {
   confirmPassword: string;
 };
 
-export type AuthContextType = {
+export interface AuthContextType {
   mail: string,
   password: string;
   isLogging: boolean;

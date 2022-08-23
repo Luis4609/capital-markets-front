@@ -18,14 +18,13 @@ import Navbar from "../components/Navbar";
 
 import styles from "../styles/Home.module.css";
 
-import { API_BACK_ALLCURRENCIES, API_URL } from "../utils/urls";
+import { API_URL } from "../utils/urls";
 
 import { NextPageWithLayout } from "./_app";
 
 import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
 import { Currency } from "../types/currency";
-import { useAuth } from "context/AuthUserContext";
 
 interface HomeProps {
   currencies: Currency[];
@@ -83,14 +82,8 @@ const Home: NextPageWithLayout = () => {
     };
   }, [currencyFrom, currencyTo, amount]);
 
-  const { user, logout } = useAuth();
-  
-  console.log(`User: ${user}`);
-
   return (
     <main className={styles.main}>
-
-      {user ? (<p>HAYYY USER</p>) : <p>Error</p>}
       <h1 className={styles.title}>Capital Markets Converter</h1>
 
       <div className={styles.converter}>

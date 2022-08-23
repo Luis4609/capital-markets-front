@@ -30,6 +30,7 @@ import { API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
 import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
+import Button from "@mui/material/Button";
 
 ChartJS.register(
   CategoryScale,
@@ -80,7 +81,7 @@ const HistoricalPage: NextPageWithLayout = () => {
         if (err.name === "AbortError") {
           console.log("Cancelled");
         } else {
-          console.log("Bad fetch: ", err.message)
+          console.log("Bad fetch: ", err.message);
         }
       });
 
@@ -99,7 +100,7 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
-  console.log("Change to: ", to)
+  console.log("Change to: ", to);
   const data = {
     labels,
     datasets: [
@@ -132,6 +133,14 @@ const HistoricalPage: NextPageWithLayout = () => {
   }) => {
     router.push(`/historical/${from}/${event.target.value}`);
   };
+
+  // const handleDownloadPdf = () => {
+
+  // }
+
+  // const handleDownloadPdf = () => {
+    
+  // }
 
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
@@ -185,7 +194,7 @@ const HistoricalPage: NextPageWithLayout = () => {
         alignItems="center"
         mt={4}
       >
-        {/* <Button variant="contained" color="error" onClick={handleDownloadPdf}>
+        <Button variant="contained" color="error" onClick={handleDownloadPdf}>
           Download pdf
         </Button>
         <Button
@@ -194,7 +203,7 @@ const HistoricalPage: NextPageWithLayout = () => {
           onClick={handleDownloadExcel}
         >
           Download excel
-        </Button> */}
+        </Button>
       </Stack>
     </Container>
   );

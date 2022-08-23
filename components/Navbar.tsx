@@ -13,9 +13,9 @@ import { UserContext } from "../pages/_app";
 const Navbar = () => {
   // const { user, setUser }: any = useContext(UserContext);
 
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
-  console.log(`User: ${user}`);
+  // console.log(`User: ${user}`);
 
   return (
     <>
@@ -58,13 +58,16 @@ const Navbar = () => {
               Historical
             </Link>
           </nav>
-          {user ? (
+          {/* {user ? (
             <Avatar>{user}</Avatar>
           ) : (
             <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Login
             </Button>
-          )}
+          )} */}
+          <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
+              Login
+            </Button>
         </Toolbar>
       </AppBar>
     </>

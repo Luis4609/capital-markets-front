@@ -7,16 +7,30 @@ import type { AuthContextType } from "../types/user";
 
 // export default AuthUserContext;
 
-const authContextDefaultValues: AuthContextType = {
-  mail: "",
-  password: "",
-  isLogging: false,
+const authContextDefaultValues: Iuser = {
+  user: {
+    mail: "",
+    password: "",
+    isLogging: false,
+  },
+  setUser: () => {}
 };
 
-const AuthContext = createContext<AuthContextType>(authContextDefaultValues);
+interface Iuser {
+  user: AuthContextType
+  setUser: Function
+}
+
+
+const AuthContext = createContext<any>(authContextDefaultValues);
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const useAuthContext = useContext(AuthContext);
+
+  if (!useAuthContext) {
+    throw new Error('useAuthContext is not defined probably is not inside a AuthProvider')
+  }
+  return useAuthContext
 }
 
 type Props = {
@@ -25,19 +39,12 @@ type Props = {
 
 export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState({
-    mail: "",
-    password: "",
-    isLogging: false,
+    
   });
-
-  const value = {
-    user,
-    setUser,
-  };
 
   return (
     <>
-      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-    </>
+      <AuthContext.Provider value={{user, setUser}}>{children}</AuthContext.Provider>
+    </> 
   );
 }

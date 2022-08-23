@@ -28,7 +28,7 @@ export const UserContext = createContext({});
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const [user, setUser] = useState();
+  // const [user, setUser] = useState();
 
   // const value = useMemo(() => ({ user, setUser }), [user]);
 
@@ -36,8 +36,8 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     // <UserContext.Provider value={{user, setUser}}>
     //   <Component {...pageProps} />
     // </UserContext.Provider>
-    <AuthProvider>
+    // <AuthProvider>
       <Component {...pageProps} />
-    </AuthProvider>
+    // </AuthProvider>
   );
 }
