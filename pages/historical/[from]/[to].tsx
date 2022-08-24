@@ -121,14 +121,14 @@ const HistoricalPage: NextPageWithLayout = () => {
   };
 
   const handleFilterStartDate = (newValue: any) => {
-    if (new Date(newValue) == "Invalid Date") {
+    if (new Date(newValue).toString() == "Invalid Date") {
       // toast.error("Invalid date input yyyy-MM-dd");
     } else {
       setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
     }
   };
   const handleFilterEndDate = (newValue: any) => {
-    if (new Date(newValue) == "Invalid Date") {
+    if (new Date(newValue).toString() == "Invalid Date") {
       // toast.error("Invalid date input");
     } else {
       setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
