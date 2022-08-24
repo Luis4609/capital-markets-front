@@ -1,6 +1,5 @@
 import { TextField } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { format } from "date-fns";
 
 interface IDateFilter {
   label: string;
@@ -9,16 +8,17 @@ interface IDateFilter {
 }
 
 const DatePicker = ({ label, date, handleDateChange }: IDateFilter) => {
-  const ACTUAL_DATE = format(new Date(), "yyyy-MM-dd");
+  const ACTUAL_DATE = (new Date().toLocaleDateString, "yyyy-MM-dd");
 
   return (
     <DesktopDatePicker
       views={["day", "month", "year"]}
       label={label}
-      inputFormat="yyyy/MM/dd"
+      inputFormat="dd/MM/yyyy"
       value={date}
       maxDate={ACTUAL_DATE}
       onChange={handleDateChange}
+      autoComplete="nope"
       renderInput={(params: JSX.IntrinsicAttributes) => (
         <TextField {...params} helperText={null} />
       )}

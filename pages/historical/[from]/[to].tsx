@@ -10,7 +10,7 @@ import {
 } from "chart.js";
 import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { format } from "date-fns";
+import { format, formatDistance } from "date-fns";
 
 //Import components
 import Footer from "../../../components/Footer";
@@ -26,11 +26,17 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import { useRouter } from "next/router";
 
-import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
+import {
+  API_BACK_HISTORIC_EXCEL,
+  API_BACK_HISTORIC_PDF,
+  API_URL,
+} from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
 import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
 import Button from "@mui/material/Button";
+import toast, { Toaster } from "react-hot-toast";
+import LocalizedDatePicker from "components/LocaleDatePicker";
 
 ChartJS.register(
   CategoryScale,
@@ -59,10 +65,10 @@ const HistoricalPage: NextPageWithLayout = () => {
 
   //Date State for the filters
   const [startDate, setStartDate] = useState<string>(
-    format(new Date(2022, 1, 1), "yyyy-MM-dd")
+    format(new Date(2022, 0, 1), "yyyy-MM-dd")
   );
   const [endDate, setEndDate] = useState<string>(
-    format(new Date(2022, 7, 15), "yyyy-MM-dd")
+    format(new Date(2022, 8, 24), "yyyy-MM-dd")
   );
 
   useEffect(() => {
@@ -90,8 +96,9 @@ const HistoricalPage: NextPageWithLayout = () => {
     };
   }, [from, to, startDate, endDate]);
 
-  //Labels
+  //Labels con las fechas
   const labels: string[] = [];
+  
   //Array con los datos de Exchange
   const exchangeData: number[] = [];
 
@@ -100,7 +107,6 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
-  console.log("Change to: ", to);
   const data = {
     labels,
     datasets: [
@@ -113,13 +119,19 @@ const HistoricalPage: NextPageWithLayout = () => {
     ],
   };
 
-  //Pick dates for the filters
-  //! Fix newValue types
   const handleFilterStartDate = (newValue: any) => {
-    setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    if (new Date(newValue) == "Invalid Date") {
+      // toast.error("Invalid date input yyyy-MM-dd");
+    } else {
+      setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    }
   };
   const handleFilterEndDate = (newValue: any) => {
-    setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    if (new Date(newValue) == "Invalid Date") {
+      // toast.error("Invalid date input");
+    } else {
+      setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    }
   };
 
   const handleChangeCurrencyFrom = (event: {
@@ -135,7 +147,6 @@ const HistoricalPage: NextPageWithLayout = () => {
   };
 
   const handleDownloadPdf = () => {
-
     fetch(API_BACK_HISTORIC_PDF, {
       method: "POST",
       body: JSON.stringify(data),
@@ -146,18 +157,24 @@ const HistoricalPage: NextPageWithLayout = () => {
       .then((resp) => resp.json())
       .then((data) => setHistoricData(data.rates))
       .catch((err) => {
-        if (err.name === "AbortError") {
-          console.log("Cancelled");
-        } else {
-          console.log("Bad fetch: ", err.message);
-        }
+        console.log("Bad fetch: ", err.message);
       });
-
-  }
+  };
 
   const handleDownloadExcel = () => {
-    
-  }
+    fetch(API_BACK_HISTORIC_EXCEL, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => setHistoricData(data.rates))
+      .catch((err) => {
+        console.log("Bad fetch: ", err.message);
+      });
+  };
 
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
@@ -167,18 +184,17 @@ const HistoricalPage: NextPageWithLayout = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Start Date"
-            date={startDate}
-            handleDateChange={handleFilterStartDate}
-          ></DatePicker>
-          <DatePicker
-            label="End Date"
-            date={endDate}
-            handleDateChange={handleFilterEndDate}
-          ></DatePicker>
-        </LocalizationProvider>
+        <LocalizedDatePicker
+          label="Start Date"
+          date={startDate}
+          handleDateChange={handleFilterStartDate}
+        ></LocalizedDatePicker>
+        <LocalizedDatePicker
+          label="End Date"
+          date={endDate}
+          handleDateChange={handleFilterEndDate}
+        ></LocalizedDatePicker>
+        <Toaster></Toaster>
         <CurrencyInput
           label="From"
           currency={FROM_CURRENCY || ""}

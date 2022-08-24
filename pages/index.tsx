@@ -83,8 +83,6 @@ const Home: NextPageWithLayout = () => {
     };
   }, [currencyFrom, currencyTo, amount]);
 
-  const { variableState, setVariableState } = useAppContext();
-  console.log(`%cContext user: ${variableState.name}`, "color: red;");
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>Capital Markets Converter</h1>
@@ -160,7 +158,6 @@ const Home: NextPageWithLayout = () => {
               >
                 Historical chart
               </Button>
-              <Button onClick={() => setVariableState({name: "PEPE", auth: true})}>êpepep</Button>
             </Stack>
           </form>
         </Box>

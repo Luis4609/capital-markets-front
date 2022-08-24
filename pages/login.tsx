@@ -63,6 +63,9 @@ const LoginPage: NextPageWithLayout = () => {
     router.push("/");
   };
 
+  const { variableState, setVariableState } = useAppContext();
+  console.log(`%cContext user: ${variableState.name}`, "color: red;");
+
   // console.log(`CONTEXT: ${user.name} + state: ${name}`);
 
   return (
@@ -105,7 +108,7 @@ const LoginPage: NextPageWithLayout = () => {
           {errors.password?.message}
         </Typography>
 
-        <Stack direction="column" spacing={2}>
+        <Stack direction="column" spacing={2} mt={2}>
           <Button type="submit" color="primary" variant="contained">
             Continue
           </Button>
