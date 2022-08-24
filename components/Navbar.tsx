@@ -1,21 +1,11 @@
-import {
-  AppBar,
-  Avatar,
-  Button,
-  Link,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Avatar, Button, Link, Toolbar, Typography } from "@mui/material";
+import { UserContext } from "context/AuthUserContext";
 import { useContext } from "react";
-import { useAuth } from "../context/AuthUserContext";
-import { UserContext } from "../pages/_app";
 
 const Navbar = () => {
-  // const { user, setUser }: any = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
-  const { user } = useAuth();
-
-  // console.log(`User: ${user}`);
+  console.log("USER: ", user)
 
   return (
     <>
@@ -58,16 +48,16 @@ const Navbar = () => {
               Historical
             </Link>
           </nav>
-          {/* {user ? (
-            <Avatar>{user}</Avatar>
+          {user ? (
+            <Avatar>{user.name}</Avatar>
           ) : (
             <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Login
             </Button>
-          )} */}
-          <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
-              Login
-            </Button>
+          )}
+          {/* <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
+            Login
+          </Button> */}
         </Toolbar>
       </AppBar>
     </>

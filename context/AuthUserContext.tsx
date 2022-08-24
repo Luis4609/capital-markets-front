@@ -1,50 +1,44 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
-import { boolean } from "yup";
-import type { AuthContextType } from "../types/user";
-// function AuthUserContext() {
-//   return <div>AuthUserContext</div>;
-// }
-
-// export default AuthUserContext;
-
-const authContextDefaultValues: Iuser = {
-  user: {
-    mail: "",
-    password: "",
-    isLogging: false,
-  },
-  setUser: () => {}
-};
-
-interface Iuser {
-  user: AuthContextType
-  setUser: Function
-}
-
-
-const AuthContext = createContext<any>(authContextDefaultValues);
-
-export function useAuth() {
-  const useAuthContext = useContext(AuthContext);
-
-  if (!useAuthContext) {
-    throw new Error('useAuthContext is not defined probably is not inside a AuthProvider')
-  }
-  return useAuthContext
-}
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type Props = {
   children: ReactNode;
 };
 
-export function AuthProvider({ children }: Props) {
-  const [user, setUser] = useState({
-    
-  });
+interface IUser {
+  name: string;
+  auth: boolean;
+}
+
+export const UserContext = createContext<any>({ name: "", auth: false });
+
+export const UserProvider = ({ children }: Props) => {
+  // User is the name of the "data" that gets stored in context
+  const [user, setUser] = useState({ name: "", auth: true });
+
+  const useUserContext = useContext(UserContext);
+
+  // if(!useUserContext){
+  //   throw new Error('useAuthContext is not defined probably is not inside a AuthProvider')
+  // }
+  // return useUserContext
+
+  const login = (name: string) => {
+    setUser((user) => ({
+      name: name,
+      auth: true,
+    }));
+  };
+
+  const logout = () => {
+    setUser((user) => ({
+      name: "",
+      auth: false,
+    }));
+  };
 
   return (
-    <>
-      <AuthContext.Provider value={{user, setUser}}>{children}</AuthContext.Provider>
-    </> 
+    <UserContext.Provider value={{ user, login, logout }}>
+      {children}
+    </UserContext.Provider>
   );
-}
+};

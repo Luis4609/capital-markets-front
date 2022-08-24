@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { ReactElement, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
@@ -18,9 +18,17 @@ import { validationSchemaLogin } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
 import { API_BACK_LOGIN } from "../utils/urls";
+import { UserContext } from "context/AuthUserContext";
+import useAppContext from "context/AppContext";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
+
+  // const { user, login } = useContext(UserContext);
+  // const [name, setName] = useState();
+
+  // const { variableState, setVariableState } = useAppContext();
+  // console.log(`%cContext user: ${variableState.name}`, "color: red;");
 
   const {
     register,
@@ -44,11 +52,18 @@ const LoginPage: NextPageWithLayout = () => {
       },
     })
       .then((res) => res.json())
-      .then((data) => console.log("RESPUESTA DEL POST2: ", data))
+      .then((data) => {
+        console.log("RESPUESTA DEL POST: ", data);
+        //setName((prev) => data.mail);
+        // login(data.mail);
+        // setVariableState({name: data.mail, auth: true})
+      })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
 
     router.push("/");
   };
+
+  // console.log(`CONTEXT: ${user.name} + state: ${name}`);
 
   return (
     <div className={styles.main}>

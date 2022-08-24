@@ -26,7 +26,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import { useRouter } from "next/router";
 
-import { API_URL } from "../../../utils/urls";
+import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
 import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
@@ -42,10 +42,10 @@ ChartJS.register(
   Legend
 );
 
-interface useFetchHistoricProps {
-  from: string | string[] | undefined;
-  to: string | string[] | undefined;
-}
+// interface useFetchHistoricProps {
+//   from: string | string[] | undefined;
+//   to: string | string[] | undefined;
+// }
 
 const HistoricalPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -134,13 +134,30 @@ const HistoricalPage: NextPageWithLayout = () => {
     router.push(`/historical/${from}/${event.target.value}`);
   };
 
-  // const handleDownloadPdf = () => {
+  const handleDownloadPdf = () => {
 
-  // }
+    fetch(API_BACK_HISTORIC_PDF, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => setHistoricData(data.rates))
+      .catch((err) => {
+        if (err.name === "AbortError") {
+          console.log("Cancelled");
+        } else {
+          console.log("Bad fetch: ", err.message);
+        }
+      });
 
-  // const handleDownloadPdf = () => {
+  }
+
+  const handleDownloadExcel = () => {
     
-  // }
+  }
 
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">

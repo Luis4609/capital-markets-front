@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import {
@@ -22,13 +22,11 @@ import { API_URL } from "../utils/urls";
 
 import { NextPageWithLayout } from "./_app";
 
+import { UserContext } from "context/AuthUserContext";
 import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
 import { Currency } from "../types/currency";
-
-interface HomeProps {
-  currencies: Currency[];
-}
+import useAppContext from "context/AppContext";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -36,6 +34,9 @@ const Home: NextPageWithLayout = () => {
 
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("EUR");
+
+  // const { user } = useContext(UserContext);
+  // console.log(`%cContext user: ${user.name}`, "color: red;");
 
   const handleChangeCurrencyFrom = (event: {
     target: { value: SetStateAction<string> };
@@ -82,6 +83,8 @@ const Home: NextPageWithLayout = () => {
     };
   }, [currencyFrom, currencyTo, amount]);
 
+  const { variableState, setVariableState } = useAppContext();
+  console.log(`%cContext user: ${variableState.name}`, "color: red;");
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>Capital Markets Converter</h1>
@@ -157,6 +160,7 @@ const Home: NextPageWithLayout = () => {
               >
                 Historical chart
               </Button>
+              <Button onClick={() => setVariableState({name: "PEPE", auth: true})}>êpepep</Button>
             </Stack>
           </form>
         </Box>

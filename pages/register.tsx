@@ -9,11 +9,14 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { UserSubmitForm } from "../types/user";
 import { validationSchemaRegister } from "../validators/schema";
 
+import { UserContext } from "context/AuthUserContext";
+import { useContext, useState } from "react";
 import styles from "../styles/Login.module.css";
 import { API_BACK_REGISTER } from "../utils/urls";
 
 const RegisterPage: NextPage = () => {
   const router = useRouter();
+  const { login } = useContext(UserContext);
 
   const {
     register,
@@ -35,13 +38,14 @@ const RegisterPage: NextPage = () => {
       },
     })
       .then((res) => res.json())
-      .then((data) => console.log("RESPUESTA DEL POST: ", data))
+      .then((data) => {
+        console.log("RESPUESTA DEL POST: ", data);
+        login(data.mail);
+      })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
 
     router.push("/");
   };
-
-  const label = { inputProps: { "aria-label": "Accept Terms" } };
 
   return (
     <div className={styles.main}>
@@ -108,7 +112,7 @@ const RegisterPage: NextPage = () => {
           {errors.dni?.message}
         </Typography>
         <TextField
-          id="outlined-basic"
+          id="email"
           label="Email"
           type="email"
           variant="outlined"
@@ -126,7 +130,7 @@ const RegisterPage: NextPage = () => {
         </Typography>
 
         <TextField
-          id="outlined-basic"
+          id="password"
           label="Password"
           type="password"
           variant="outlined"
@@ -143,7 +147,7 @@ const RegisterPage: NextPage = () => {
           {errors.password?.message}
         </Typography>
         <TextField
-          id="outlined-basic"
+          id="confirm-password"
           label="Confirm Password"
           type="password"
           variant="outlined"
