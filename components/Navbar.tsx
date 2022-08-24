@@ -1,11 +1,23 @@
-import { AppBar, Avatar, Button, Link, Toolbar, Typography } from "@mui/material";
-import { UserContext } from "context/AuthUserContext";
-import { useContext } from "react";
+import {
+  AppBar,
+  Avatar,
+  Button,
+  Link,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import useStorage from "hooks/useStorage";
+import { useState } from "react";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
-  const { user } = useContext(UserContext);
+  const { getItem, removeItem } = useStorage();
 
-  console.log("USER: ", user)
+  const user = getItem("user");
+  if (user != undefined) {
+    console.log("Error");
+  }
+  console.log("user STORAGE user: ", user);
 
   return (
     <>
@@ -48,13 +60,14 @@ const Navbar = () => {
               Historical
             </Link>
           </nav>
-          {user ? (
-            <Avatar>{user.name}</Avatar>
+          {/* {user ? (
+            <Avatar>{user?.charAt(0)}</Avatar>
           ) : (
             <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Login
             </Button>
-          )}
+          )} */}
+          <UserMenu handleLogout={removeItem}></UserMenu>
           {/* <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
             Login
           </Button> */}

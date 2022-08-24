@@ -37,6 +37,7 @@ import { options } from "../../../utils/chart";
 import Button from "@mui/material/Button";
 import toast, { Toaster } from "react-hot-toast";
 import LocalizedDatePicker from "components/LocaleDatePicker";
+import useStorage from "hooks/useStorage";
 
 ChartJS.register(
   CategoryScale,
@@ -175,6 +176,12 @@ const HistoricalPage: NextPageWithLayout = () => {
         console.log("Bad fetch: ", err.message);
       });
   };
+
+
+  const { getItem, setItem } = useStorage();
+
+  const token = getItem("user");
+  console.log("TOKEN STORAGE user: ", token); 
 
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">

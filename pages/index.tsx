@@ -1,4 +1,4 @@
-import { SetStateAction, useContext, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 import {
@@ -22,11 +22,11 @@ import { API_URL } from "../utils/urls";
 
 import { NextPageWithLayout } from "./_app";
 
-import { UserContext } from "context/AuthUserContext";
 import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
-import { Currency } from "../types/currency";
-import useAppContext from "context/AppContext";
+
+import useStorage from "hooks/useStorage";
+import { type } from "os";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -82,6 +82,16 @@ const Home: NextPageWithLayout = () => {
       isCancelled = true;
     };
   }, [currencyFrom, currencyTo, amount]);
+
+  //Storage
+  const { getItem, setItem } = useStorage();
+
+  const token = getItem("user");
+  console.log("TOKEN STORAGE user: ", token); // will return either a <token-value> or <''>
+
+  const pepe: boolean = setItem("user", "Pepe", "session");
+
+  console.log("Pepe storage", pepe);
 
   return (
     <main className={styles.main}>

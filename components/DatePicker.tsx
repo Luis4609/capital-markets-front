@@ -18,7 +18,6 @@ const DatePicker = ({ label, date, handleDateChange }: IDateFilter) => {
       value={date}
       maxDate={ACTUAL_DATE}
       onChange={handleDateChange}
-      autoComplete="nope"
       renderInput={(params: JSX.IntrinsicAttributes) => (
         <TextField {...params} helperText={null} />
       )}
