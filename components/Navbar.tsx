@@ -59,15 +59,15 @@ const Navbar = () => {
               Historical
             </Link>
           </nav>
-          {!user ? (
+          {user ? (
+            <UserMenu
+              handleLogout={removeItem}
+              userName={user?.charAt(0).toUpperCase()}
+            ></UserMenu>
+          ) : (
             <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Login
             </Button>
-          ) : (
-            <>
-              <Avatar>{user?.charAt(0).toUpperCase()}</Avatar>
-              <UserMenu handleLogout={removeItem}></UserMenu>
-            </>
           )}
         </Toolbar>
       </AppBar>

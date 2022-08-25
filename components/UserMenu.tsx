@@ -4,12 +4,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import useStorage from "hooks/useStorage";
 import router from "next/router";
+import { Avatar } from "@mui/material";
+import { blue } from "@mui/material/colors";
 
 interface IUserMenu {
   handleLogout?: any;
+  userName: string;
 }
 
-export default function UserMenu({ handleLogout }: IUserMenu) {
+export default function UserMenu({ handleLogout, userName }: IUserMenu) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -24,12 +27,11 @@ export default function UserMenu({ handleLogout }: IUserMenu) {
 
   const handleLogout2 = () => {
     removeItem("userAuth", "local");
-    router.push("/")
+    router.push("/");
   };
 
   return (
     <>
-    
       <Button
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
@@ -37,7 +39,7 @@ export default function UserMenu({ handleLogout }: IUserMenu) {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        Dashboard
+        <Avatar sx={{ bgcolor: blue[500] }}>{userName}</Avatar>
       </Button>
       <Menu
         id="basic-menu"
@@ -48,8 +50,8 @@ export default function UserMenu({ handleLogout }: IUserMenu) {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        {/* <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My account</MenuItem> */}
         <MenuItem onClick={handleLogout2}>Logout</MenuItem>
       </Menu>
     </>

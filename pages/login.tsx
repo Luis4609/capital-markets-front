@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,6 +20,7 @@ import { API_BACK_LOGIN } from "../utils/urls";
 import styles from "../styles/Login.module.css";
 
 import useStorage from "hooks/useStorage";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -50,11 +51,14 @@ const LoginPage: NextPageWithLayout = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("RESPUESTA DEL POST: ", data);
-        setItem("userAuth", data.mail, "local");
+        if (data.mail != null) {
+          setItem("userAuth", data.mail, "local");
+          router.push("/");
+        } else {
+          toast.error("Bad credentials!");
+        }
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
-
-    router.push("/");
   };
 
   return (
@@ -109,6 +113,7 @@ const LoginPage: NextPageWithLayout = () => {
           >
             Create new account
           </Button>
+          <Toaster></Toaster>
         </Stack>
       </form>
     </div>

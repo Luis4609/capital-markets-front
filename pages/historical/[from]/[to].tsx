@@ -30,6 +30,7 @@ import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
 import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
+import useStorage from "hooks/useStorage";
 
 ChartJS.register(
   CategoryScale,
@@ -163,6 +164,13 @@ const HistoricalPage: NextPageWithLayout = () => {
       });
   };
 
+  const { getItem } = useStorage();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    setUser(getItem("userAuth"));
+  }, [user]);
+
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
       <Stack
@@ -204,7 +212,23 @@ const HistoricalPage: NextPageWithLayout = () => {
         )}
       </Stack>
       <Line options={options} data={data} />
-      <Stack
+
+      {user ? (
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={2}
+          justifyContent="flex-end"
+          alignItems="center"
+          mt={4}
+        >
+          <a href="/historical.pdf" download>
+            <Button variant="contained" color="error">
+              Download pdf
+            </Button>
+          </a>
+        </Stack>
+      ) : null}
+      {/* <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="flex-end"
@@ -216,7 +240,7 @@ const HistoricalPage: NextPageWithLayout = () => {
             Download pdf
           </Button>
         </a>
-      </Stack>
+      </Stack> */}
     </Container>
   );
 };
