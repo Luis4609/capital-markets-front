@@ -8,36 +8,28 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { format } from "date-fns";
 import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { format, formatDistance } from "date-fns";
 
 //Import components
+import CurrencyInput from "../../../components/CurrencyInput";
 import Footer from "../../../components/Footer";
 import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
-import CurrencyInput from "../../../components/CurrencyInput";
-import DatePicker from "../../../components/DatePicker";
 
 //Components from MUI
 import { Container, Stack, Typography } from "@mui/material";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import { useRouter } from "next/router";
 
-import {
-  API_BACK_HISTORIC_EXCEL,
-  API_BACK_HISTORIC_PDF,
-  API_URL,
-} from "../../../utils/urls";
-import { NextPageWithLayout } from "../../_app";
+import Button from "@mui/material/Button";
+import LocalizedDatePicker from "components/LocaleDatePicker";
+import { Toaster } from "react-hot-toast";
 import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
-import Button from "@mui/material/Button";
-import toast, { Toaster } from "react-hot-toast";
-import LocalizedDatePicker from "components/LocaleDatePicker";
-import useStorage from "hooks/useStorage";
+import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
+import { NextPageWithLayout } from "../../_app";
 
 ChartJS.register(
   CategoryScale,
@@ -83,7 +75,10 @@ const HistoricalPage: NextPageWithLayout = () => {
       }
     )
       .then((resp) => resp.json())
-      .then((data) => setHistoricData(data.rates))
+      .then((data) => {
+        setHistoricData(data.rates);
+        handleDownloadPdf();
+      })
       .catch((err) => {
         if (err.name === "AbortError") {
           console.log("Cancelled");
@@ -99,7 +94,7 @@ const HistoricalPage: NextPageWithLayout = () => {
 
   //Labels con las fechas
   const labels: string[] = [];
-  
+
   //Array con los datos de Exchange
   const exchangeData: number[] = [];
 
@@ -150,38 +145,23 @@ const HistoricalPage: NextPageWithLayout = () => {
   const handleDownloadPdf = () => {
     fetch(API_BACK_HISTORIC_PDF, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        amount: "1",
+        base: FROM_CURRENCY,
+        conversion: TO_CURRENCY,
+        startDate: startDate,
+        endDate: endDate,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((resp) => resp.json())
-      .then((data) => setHistoricData(data.rates))
+      .then((data) => console.log(data))
       .catch((err) => {
         console.log("Bad fetch: ", err.message);
       });
   };
-
-  const handleDownloadExcel = () => {
-    fetch(API_BACK_HISTORIC_EXCEL, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => setHistoricData(data.rates))
-      .catch((err) => {
-        console.log("Bad fetch: ", err.message);
-      });
-  };
-
-
-  const { getItem, setItem } = useStorage();
-
-  const token = getItem("user");
-  console.log("TOKEN STORAGE user: ", token); 
 
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
@@ -212,19 +192,16 @@ const HistoricalPage: NextPageWithLayout = () => {
           currency={TO_CURRENCY || ""}
           handleCurrencyChange={handleChangeCurrencyTo}
         ></CurrencyInput>
-
-        <Typography variant="h5" color="primary">
-          {from !== to ? (
-            <Typography variant="h5" color="primary">
-              {" "}
-              Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
-            </Typography>
-          ) : (
-            <Typography variant="body1" color="secondary">
-              You selected the same currency or the input is incorrect
-            </Typography>
-          )}
-        </Typography>
+        {from !== to ? (
+          <Typography variant="h5" color="primary">
+            {" "}
+            Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
+          </Typography>
+        ) : (
+          <Typography variant="body1" color="secondary">
+            You selected the same currency or the input is incorrect
+          </Typography>
+        )}
       </Stack>
       <Line options={options} data={data} />
       <Stack
@@ -234,16 +211,11 @@ const HistoricalPage: NextPageWithLayout = () => {
         alignItems="center"
         mt={4}
       >
-        <Button variant="contained" color="error" onClick={handleDownloadPdf}>
-          Download pdf
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleDownloadExcel}
-        >
-          Download excel
-        </Button>
+        <a href="/historical.pdf" download>
+          <Button variant="contained" color="error">
+            Download pdf
+          </Button>
+        </a>
       </Stack>
     </Container>
   );
