@@ -2,12 +2,14 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import useStorage from "hooks/useStorage";
+import router from "next/router";
 
 interface IUserMenu {
-    handleLogout?: any,
+  handleLogout?: any;
 }
 
-export default function UserMenu({handleLogout}: IUserMenu) {
+export default function UserMenu({ handleLogout }: IUserMenu) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -18,8 +20,16 @@ export default function UserMenu({handleLogout}: IUserMenu) {
     setAnchorEl(null);
   };
 
+  const { removeItem } = useStorage();
+
+  const handleLogout2 = () => {
+    removeItem("userAuth", "local");
+    router.push("/")
+  };
+
   return (
     <>
+    
       <Button
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
@@ -40,7 +50,7 @@ export default function UserMenu({handleLogout}: IUserMenu) {
       >
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout2}>Logout</MenuItem>
       </Menu>
     </>
   );

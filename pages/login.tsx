@@ -19,8 +19,12 @@ import { API_BACK_LOGIN } from "../utils/urls";
 
 import styles from "../styles/Login.module.css";
 
+import useStorage from "hooks/useStorage";
+
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
+
+  const { setItem } = useStorage();
 
   const {
     register,
@@ -46,10 +50,7 @@ const LoginPage: NextPageWithLayout = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("RESPUESTA DEL POST: ", data);
-        //setName((prev) => data.mail);
-        // login(data.mail);
-        // setVariableState({name: data.mail, auth: true})
-        sessionStorage.setItem("userAuth", data);
+        setItem("userAuth", data.mail, "local");
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
 

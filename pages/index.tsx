@@ -26,7 +26,6 @@ import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
 
 import useStorage from "hooks/useStorage";
-import { type } from "os";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -35,8 +34,12 @@ const Home: NextPageWithLayout = () => {
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("EUR");
 
-  // const { user } = useContext(UserContext);
-  // console.log(`%cContext user: ${user.name}`, "color: red;");
+  //Storage
+  const { getItem } = useStorage();
+
+  const token = getItem("userAuth", "local");
+
+  console.log("TOKEN STORAGE user index: ", token); // will return either a <token-value> or <''>
 
   const handleChangeCurrencyFrom = (event: {
     target: { value: SetStateAction<string> };
@@ -83,16 +86,6 @@ const Home: NextPageWithLayout = () => {
     };
   }, [currencyFrom, currencyTo, amount]);
 
-  //Storage
-  const { getItem, setItem } = useStorage();
-
-  const token = getItem("user");
-  console.log("TOKEN STORAGE user: ", token); // will return either a <token-value> or <''>
-
-  const pepe: boolean = setItem("user", "Pepe", "session");
-
-  console.log("Pepe storage", pepe);
-
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>Capital Markets Converter</h1>
@@ -107,13 +100,10 @@ const Home: NextPageWithLayout = () => {
               <TextField
                 id="amount"
                 type="number"
+                label="Amount"
                 value={amount}
                 onChange={(e) => setAmount(parseFloat(e.target.value))}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">Amount</InputAdornment>
-                  ),
-                }}
+                
               />
               <CurrencyInput
                 label="From"

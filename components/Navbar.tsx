@@ -7,17 +7,16 @@ import {
   Typography,
 } from "@mui/material";
 import useStorage from "hooks/useStorage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   const { getItem, removeItem } = useStorage();
+  const [user, setUser] = useState<any>(null);
 
-  const user = getItem("user");
-  if (user != undefined) {
-    console.log("Error");
-  }
-  console.log("user STORAGE user: ", user);
+  useEffect(() => {
+    setUser(getItem("userAuth"));
+  });
 
   return (
     <>
@@ -60,17 +59,16 @@ const Navbar = () => {
               Historical
             </Link>
           </nav>
-          {/* {user ? (
-            <Avatar>{user?.charAt(0)}</Avatar>
-          ) : (
+          {!user ? (
             <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Login
             </Button>
-          )} */}
-          <UserMenu handleLogout={removeItem}></UserMenu>
-          {/* <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
-            Login
-          </Button> */}
+          ) : (
+            <>
+              <Avatar>{user?.charAt(0).toUpperCase()}</Avatar>
+              <UserMenu handleLogout={removeItem}></UserMenu>
+            </>
+          )}
         </Toolbar>
       </AppBar>
     </>
