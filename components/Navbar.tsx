@@ -6,13 +6,17 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useContext } from "react";
-import { UserContext } from "../pages/_app";
+import useStorage from "hooks/useStorage";
+import { useEffect, useState } from "react";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
-  const { user }: any = useContext(UserContext);
+  const { getItem, removeItem } = useStorage();
+  const [user, setUser] = useState<any>(null);
 
-  console.log(`User: ${user}`);
+  useEffect(() => {
+    setUser(getItem("userAuth"));
+  });
 
   return (
     <>
@@ -56,7 +60,10 @@ const Navbar = () => {
             </Link>
           </nav>
           {user ? (
-            <Avatar>{user}</Avatar>
+            <UserMenu
+              handleLogout={removeItem}
+              userName={user?.charAt(0).toUpperCase()}
+            ></UserMenu>
           ) : (
             <Button href="/login" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Login

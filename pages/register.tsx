@@ -4,23 +4,19 @@ import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
-import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 
 import { UserSubmitForm } from "../types/user";
 import { validationSchemaRegister } from "../validators/schema";
 
+import { UserContext } from "context/AuthUserContext";
+import { useContext, useState } from "react";
 import styles from "../styles/Login.module.css";
+import { API_BACK_REGISTER } from "../utils/urls";
 
 const RegisterPage: NextPage = () => {
   const router = useRouter();
+  const { login } = useContext(UserContext);
 
   const {
     register,
@@ -33,10 +29,23 @@ const RegisterPage: NextPage = () => {
 
   const onSubmit = (data: UserSubmitForm) => {
     console.log(JSON.stringify(data, null, 2));
+
+    fetch(API_BACK_REGISTER, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("RESPUESTA DEL POST: ", data);
+        login(data.mail);
+      })
+      .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
+
     router.push("/");
   };
-
-  const label = { inputProps: { "aria-label": "Accept Terms" } };
 
   return (
     <div className={styles.main}>
@@ -51,30 +60,30 @@ const RegisterPage: NextPage = () => {
 
       <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
         <TextField
-          id="fullname"
-          label="Full Name"
+          id="name"
+          label="Name"
           variant="outlined"
           margin="normal"
           fullWidth
-          {...register("fullname")}
-          error={errors.fullname ? true : false}
+          {...register("name")}
+          error={errors.name ? true : false}
         />
         <Typography
           variant="inherit"
           color="textSecondary"
           sx={{ color: "rgb(240, 87, 87)" }}
         >
-          {errors.fullname?.message}
+          {errors.name?.message}
         </Typography>
 
         <TextField
-          id="username"
-          label="Username"
+          id="surname"
+          label="Surname"
           variant="outlined"
           margin="normal"
           fullWidth
-          {...register("username")}
-          error={errors.username ? true : false}
+          {...register("surname")}
+          error={errors.surname ? true : false}
         />
 
         <Typography
@@ -82,11 +91,28 @@ const RegisterPage: NextPage = () => {
           color="textSecondary"
           sx={{ color: "rgb(240, 87, 87)" }}
         >
-          {errors.username?.message}
+          {errors.surname?.message}
         </Typography>
 
         <TextField
-          id="outlined-basic"
+          id="dni"
+          label="DNI"
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          {...register("dni")}
+          error={errors.dni ? true : false}
+        />
+
+        <Typography
+          variant="inherit"
+          color="textSecondary"
+          sx={{ color: "rgb(240, 87, 87)" }}
+        >
+          {errors.dni?.message}
+        </Typography>
+        <TextField
+          id="email"
           label="Email"
           type="email"
           variant="outlined"
@@ -104,7 +130,7 @@ const RegisterPage: NextPage = () => {
         </Typography>
 
         <TextField
-          id="outlined-basic"
+          id="password"
           label="Password"
           type="password"
           variant="outlined"
@@ -120,9 +146,8 @@ const RegisterPage: NextPage = () => {
         >
           {errors.password?.message}
         </Typography>
-
         <TextField
-          id="outlined-basic"
+          id="confirm-password"
           label="Confirm Password"
           type="password"
           variant="outlined"

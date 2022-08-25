@@ -11,11 +11,11 @@ interface CurrencyInputProps {
   handleCurrencyChange?: any;
 }
 
-function CurrencyInput({
+const CurrencyInput = ({
   label,
   currency,
   handleCurrencyChange,
-}: CurrencyInputProps) {
+}: CurrencyInputProps) => {
   return (
     <FormControl variant="outlined" sx={{ m: 1, width: 200 }} size="medium">
       <InputLabel id="demo-simple-select-standard-label">{label}</InputLabel>
@@ -34,6 +34,6 @@ function CurrencyInput({
       </Select>
     </FormControl>
   );
-}
+};
 
 export default CurrencyInput;

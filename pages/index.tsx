@@ -7,7 +7,7 @@ import {
   InputAdornment,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { blue } from "@mui/material/colors";
@@ -25,12 +25,21 @@ import { NextPageWithLayout } from "./_app";
 import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
 
+import useStorage from "hooks/useStorage";
+
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
   const [amountOutPut, setAmountOutPut] = useState(0);
 
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("EUR");
+
+  //Storage
+  const { getItem } = useStorage();
+
+  const token = getItem("userAuth", "local");
+
+  console.log("TOKEN STORAGE user index: ", token); // will return either a <token-value> or <''>
 
   const handleChangeCurrencyFrom = (event: {
     target: { value: SetStateAction<string> };
@@ -45,9 +54,6 @@ const Home: NextPageWithLayout = () => {
   };
 
   const handleCurrencyChanges = () => {
-    // if (amount !== 0) {
-    //   setAmount((prev) => prev);
-    // }
     if (currencyFrom === currencyTo) {
       toast.error("Same currencies!!!. Please check");
     } else {
@@ -71,7 +77,7 @@ const Home: NextPageWithLayout = () => {
         }
       })
       .catch((error) => {
-        console.error(`Error to fetch exchange conversion: ${error.message}`);
+        console.log(`Error to fetch exchange conversion: ${error.message}`);
         toast.error("Bad conversion inputs!");
       });
 
@@ -94,13 +100,10 @@ const Home: NextPageWithLayout = () => {
               <TextField
                 id="amount"
                 type="number"
+                label="Amount"
                 value={amount}
                 onChange={(e) => setAmount(parseFloat(e.target.value))}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">Amount</InputAdornment>
-                  ),
-                }}
+                
               />
               <CurrencyInput
                 label="From"
@@ -172,5 +175,17 @@ Home.getLayout = function getLayout(page) {
     </Layout>
   );
 };
+
+//* Get currency list from the back
+// export async function getStaticProps() {
+//   const res = await fetch(API_BACK_ALLCURRENCIES);
+//   const currencies = await res.json();
+
+//   return {
+//     props: {
+//       currencies,
+//     },
+//   };
+// }
 
 export default Home;

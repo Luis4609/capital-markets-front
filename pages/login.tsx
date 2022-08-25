@@ -1,7 +1,7 @@
-import { ReactElement, useContext } from "react";
+import { ReactElement, useState } from "react";
 import { useRouter } from "next/router";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -12,18 +12,20 @@ import Footer from "../components/Footer";
 import Layout from "../components/Layout/layout";
 
 import { UserLoginSubmitForm } from "../types/user";
-import { NextPageWithLayout, UserContext } from "./_app";
+import { NextPageWithLayout } from "./_app";
 
 import { validationSchemaLogin } from "../validators/schema";
+import { API_BACK_LOGIN } from "../utils/urls";
 
 import styles from "../styles/Login.module.css";
+
+import useStorage from "hooks/useStorage";
+import toast, { Toaster } from "react-hot-toast";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
 
-  const { user, setUser }: any = useContext(UserContext);
-
-  console.log(`User: ${user}`);
+  const { setItem } = useStorage();
 
   const {
     register,
@@ -36,25 +38,27 @@ const LoginPage: NextPageWithLayout = () => {
   const onSubmit = (data: UserLoginSubmitForm) => {
     console.log("JSON FROM: " + JSON.stringify(data, null, 2));
 
-    setUser(JSON.stringify(data, null, 2));
+    // setUser(JSON.stringify(data, null, 2));
 
     //Request BACK-END ENDPOINT
-    fetch("http://192.168.97.2:8080/user/login", {
+    fetch(API_BACK_LOGIN, {
       method: "POST",
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
-        // "Content-Length": "512",
       },
-      body: JSON.stringify(data, null, 2),
-      credentials: "same-origin",
-      mode: "no-cors",
-      cache: "no-cache",
-      referrerPolicy: "no-referrer",
     })
-      .then((res) => console.log("RESPUESTA DEL POST: " + res))
-      .catch((res) => console.log("FALLO EN LA REQUEST: " + res));
-
-    router.push("/");
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("RESPUESTA DEL POST: ", data);
+        if (data.mail != null) {
+          setItem("userAuth", data.mail, "local");
+          router.push("/");
+        } else {
+          toast.error("Bad credentials!");
+        }
+      })
+      .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
   };
 
   return (
@@ -97,7 +101,7 @@ const LoginPage: NextPageWithLayout = () => {
           {errors.password?.message}
         </Typography>
 
-        <Stack direction="column" spacing={2}>
+        <Stack direction="column" spacing={2} mt={2}>
           <Button type="submit" color="primary" variant="contained">
             Continue
           </Button>
@@ -109,6 +113,7 @@ const LoginPage: NextPageWithLayout = () => {
           >
             Create new account
           </Button>
+          <Toaster></Toaster>
         </Stack>
       </form>
     </div>

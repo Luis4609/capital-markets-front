@@ -8,28 +8,29 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { format } from "date-fns";
 import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { format } from "date-fns";
 
 //Import components
+import CurrencyInput from "../../../components/CurrencyInput";
 import Footer from "../../../components/Footer";
 import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
-import CurrencyInput from "../../../components/CurrencyInput";
-import DatePicker from "../../../components/DatePicker";
 
 //Components from MUI
 import { Container, Stack, Typography } from "@mui/material";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import { useRouter } from "next/router";
 
-import { API_URL } from "../../../utils/urls";
-import { NextPageWithLayout } from "../../_app";
+import Button from "@mui/material/Button";
+import LocalizedDatePicker from "components/LocaleDatePicker";
+import { Toaster } from "react-hot-toast";
 import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
+import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
+import { NextPageWithLayout } from "../../_app";
+import useStorage from "hooks/useStorage";
 
 ChartJS.register(
   CategoryScale,
@@ -41,10 +42,10 @@ ChartJS.register(
   Legend
 );
 
-interface useFetchHistoricProps {
-  from: string | string[] | undefined;
-  to: string | string[] | undefined;
-}
+// interface useFetchHistoricProps {
+//   from: string | string[] | undefined;
+//   to: string | string[] | undefined;
+// }
 
 const HistoricalPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -58,10 +59,10 @@ const HistoricalPage: NextPageWithLayout = () => {
 
   //Date State for the filters
   const [startDate, setStartDate] = useState<string>(
-    format(new Date(2022, 1, 1), "yyyy-MM-dd")
+    format(new Date(2022, 0, 1), "yyyy-MM-dd")
   );
   const [endDate, setEndDate] = useState<string>(
-    format(new Date(2022, 7, 15), "yyyy-MM-dd")
+    format(new Date(2022, 8, 24), "yyyy-MM-dd")
   );
 
   useEffect(() => {
@@ -75,12 +76,15 @@ const HistoricalPage: NextPageWithLayout = () => {
       }
     )
       .then((resp) => resp.json())
-      .then((data) => setHistoricData(data.rates))
+      .then((data) => {
+        setHistoricData(data.rates);
+        handleDownloadPdf();
+      })
       .catch((err) => {
         if (err.name === "AbortError") {
           console.log("Cancelled");
         } else {
-          console.log("Bad fetch: ", err.message)
+          console.log("Bad fetch: ", err.message);
         }
       });
 
@@ -89,8 +93,9 @@ const HistoricalPage: NextPageWithLayout = () => {
     };
   }, [from, to, startDate, endDate]);
 
-  //Labels
+  //Labels con las fechas
   const labels: string[] = [];
+
   //Array con los datos de Exchange
   const exchangeData: number[] = [];
 
@@ -99,7 +104,6 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
-  console.log("Change to: ", to)
   const data = {
     labels,
     datasets: [
@@ -112,13 +116,19 @@ const HistoricalPage: NextPageWithLayout = () => {
     ],
   };
 
-  //Pick dates for the filters
-  //! Fix newValue types
   const handleFilterStartDate = (newValue: any) => {
-    setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    if (new Date(newValue).toString() == "Invalid Date") {
+      // toast.error("Invalid date input yyyy-MM-dd");
+    } else {
+      setStartDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    }
   };
   const handleFilterEndDate = (newValue: any) => {
-    setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    if (new Date(newValue).toString() == "Invalid Date") {
+      // toast.error("Invalid date input");
+    } else {
+      setEndDate((prev) => format(new Date(newValue), "yyyy-MM-dd"));
+    }
   };
 
   const handleChangeCurrencyFrom = (event: {
@@ -133,6 +143,34 @@ const HistoricalPage: NextPageWithLayout = () => {
     router.push(`/historical/${from}/${event.target.value}`);
   };
 
+  const handleDownloadPdf = () => {
+    fetch(API_BACK_HISTORIC_PDF, {
+      method: "POST",
+      body: JSON.stringify({
+        amount: "1",
+        base: FROM_CURRENCY,
+        conversion: TO_CURRENCY,
+        startDate: startDate,
+        endDate: endDate,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => console.log(data))
+      .catch((err) => {
+        console.log("Bad fetch: ", err.message);
+      });
+  };
+
+  const { getItem } = useStorage();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    setUser(getItem("userAuth"));
+  }, [user]);
+
   return (
     <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
       <Stack
@@ -141,18 +179,17 @@ const HistoricalPage: NextPageWithLayout = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Start Date"
-            date={startDate}
-            handleDateChange={handleFilterStartDate}
-          ></DatePicker>
-          <DatePicker
-            label="End Date"
-            date={endDate}
-            handleDateChange={handleFilterEndDate}
-          ></DatePicker>
-        </LocalizationProvider>
+        <LocalizedDatePicker
+          label="Start Date"
+          date={startDate}
+          handleDateChange={handleFilterStartDate}
+        ></LocalizedDatePicker>
+        <LocalizedDatePicker
+          label="End Date"
+          date={endDate}
+          handleDateChange={handleFilterEndDate}
+        ></LocalizedDatePicker>
+        <Toaster></Toaster>
         <CurrencyInput
           label="From"
           currency={FROM_CURRENCY || ""}
@@ -163,39 +200,47 @@ const HistoricalPage: NextPageWithLayout = () => {
           currency={TO_CURRENCY || ""}
           handleCurrencyChange={handleChangeCurrencyTo}
         ></CurrencyInput>
-
-        <Typography variant="h5" color="primary">
-          {from !== to ? (
-            <Typography variant="h5" color="primary">
-              {" "}
-              Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
-            </Typography>
-          ) : (
-            <Typography variant="body1" color="secondary">
-              You selected the same currency or the input is incorrect
-            </Typography>
-          )}
-        </Typography>
+        {from !== to ? (
+          <Typography variant="h5" color="primary">
+            {" "}
+            Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
+          </Typography>
+        ) : (
+          <Typography variant="body1" color="secondary">
+            You selected the same currency or the input is incorrect
+          </Typography>
+        )}
       </Stack>
       <Line options={options} data={data} />
-      <Stack
+
+      {user ? (
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={2}
+          justifyContent="flex-end"
+          alignItems="center"
+          mt={4}
+        >
+          <a href="/historical.pdf" download>
+            <Button variant="contained" color="error">
+              Download pdf
+            </Button>
+          </a>
+        </Stack>
+      ) : null}
+      {/* <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="flex-end"
         alignItems="center"
         mt={4}
       >
-        {/* <Button variant="contained" color="error" onClick={handleDownloadPdf}>
-          Download pdf
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleDownloadExcel}
-        >
-          Download excel
-        </Button> */}
-      </Stack>
+        <a href="/historical.pdf" download>
+          <Button variant="contained" color="error">
+            Download pdf
+          </Button>
+        </a>
+      </Stack> */}
     </Container>
   );
 };
