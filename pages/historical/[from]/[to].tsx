@@ -172,7 +172,7 @@ const HistoricalPage: NextPageWithLayout = () => {
   }, [user]);
 
   return (
-    <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
+    <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="lg">
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
@@ -213,7 +213,7 @@ const HistoricalPage: NextPageWithLayout = () => {
       </Stack>
       <Line options={options} data={data} />
 
-      {user ? (
+      {/* {user ? (
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
@@ -227,8 +227,8 @@ const HistoricalPage: NextPageWithLayout = () => {
             </Button>
           </a>
         </Stack>
-      ) : null}
-      {/* <Stack
+      ) : null} */}
+      <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="flex-end"
@@ -240,7 +240,7 @@ const HistoricalPage: NextPageWithLayout = () => {
             Download pdf
           </Button>
         </a>
-      </Stack> */}
+      </Stack>
     </Container>
   );
 };
