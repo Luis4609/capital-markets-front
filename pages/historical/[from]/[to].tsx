@@ -84,7 +84,7 @@ const HistoricalPage: NextPageWithLayout = () => {
         if (err.name === "AbortError") {
           console.log("Cancelled");
         } else {
-          console.log("Bad fetch: ", err.message);
+          console.info("Bad fetch: ", err.message);
         }
       });
 

@@ -13,10 +13,13 @@ import { UserContext } from "context/AuthUserContext";
 import { useContext, useState } from "react";
 import styles from "../styles/Login.module.css";
 import { API_BACK_REGISTER } from "../utils/urls";
+import useStorage from "hooks/useStorage";
+import toast, { Toaster } from "react-hot-toast";
+
 
 const RegisterPage: NextPage = () => {
   const router = useRouter();
-  const { login } = useContext(UserContext);
+  const { setItem } = useStorage();
 
   const {
     register,
@@ -39,12 +42,15 @@ const RegisterPage: NextPage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("RESPUESTA DEL POST: ", data);
-        login(data.mail);
+        if (data.mail != null) {
+          console.log("RESPUESTA DEL POST: ", data);
+          setItem("userAuth", data.mail, "local");
+          router.push("/");
+        } else {
+          toast.error("Bad credentials!");
+        }
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
-
-    router.push("/");
   };
 
   return (
@@ -199,6 +205,7 @@ const RegisterPage: NextPage = () => {
           >
             Login
           </Button>
+          <Toaster></Toaster>
         </Stack>
       </form>
     </div>
