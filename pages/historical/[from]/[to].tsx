@@ -6,7 +6,7 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip,
+  Tooltip
 } from "chart.js";
 import { format } from "date-fns";
 import { ReactElement, useEffect, useState } from "react";
@@ -23,14 +23,13 @@ import { Container, Stack, Typography } from "@mui/material";
 
 import { useRouter } from "next/router";
 
-import Button from "@mui/material/Button";
 import LocalizedDatePicker from "components/LocaleDatePicker";
-import { Toaster } from "react-hot-toast";
+import useStorage from "hooks/useStorage";
+import toast, { Toaster } from "react-hot-toast";
 import { UrlObject } from "url";
 import { options } from "../../../utils/chart";
 import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
-import useStorage from "hooks/useStorage";
 
 ChartJS.register(
   CategoryScale,
@@ -51,6 +50,14 @@ const HistoricalPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { from, to } = router.query;
 
+  //HANDLE USER AUTH
+  const { getItem } = useStorage();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    setUser(getItem("userAuth"));
+  }, [user]);
+
   /* eslint-disable-next-line */
   const FROM_CURRENCY: string | undefined = from?.toString();
   const TO_CURRENCY: string | undefined = to?.toString();
@@ -66,31 +73,38 @@ const HistoricalPage: NextPageWithLayout = () => {
   );
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
 
-    fetch(
-      `https://${API_URL}/${startDate}..${endDate}?amount=1&from=${from}&to=${to}`,
-      {
-        signal,
-      }
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        setHistoricData(data.rates);
-        handleDownloadPdf();
-      })
-      .catch((err) => {
-        if (err.name === "AbortError") {
-          console.log("Cancelled");
-        } else {
-          console.info("Bad fetch: ", err.message);
+    if (startDate > endDate) {
+      toast.error("Start Date is greater than the End Date");
+    } else if (from == undefined || to == undefined) {
+    } else if (from === to) {
+      toast.error("You can't select the same currency");
+    } else {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      fetch(
+        `https://${API_URL}/${startDate}..${endDate}?amount=1&from=${from}&to=${to}`,
+        {
+          signal,
         }
-      });
+      )
+        .then((resp) => resp.json())
+        .then((data) => {
+          setHistoricData(data.rates);
+        })
+        .catch((err) => {
+          if (err.name === "AbortError") {
+            console.log("Cancelled");
+          } else {
+            console.info("Bad fetch: ", err.message);
+          }
+        });
 
-    return () => {
-      controller.abort();
-    };
+      return () => {
+        controller.abort();
+      };
+    }
   }, [from, to, startDate, endDate]);
 
   //Labels con las fechas
@@ -164,15 +178,12 @@ const HistoricalPage: NextPageWithLayout = () => {
       });
   };
 
-  const { getItem } = useStorage();
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    setUser(getItem("userAuth"));
-  }, [user]);
-
   return (
-    <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="lg">
+    <Container
+      sx={{ marginBottom: "3rem", marginTop: "3rem" }}
+      disableGutters={true}
+      maxWidth="lg"
+    >
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
@@ -202,8 +213,7 @@ const HistoricalPage: NextPageWithLayout = () => {
         ></CurrencyInput>
         {from !== to ? (
           <Typography variant="h5" color="primary">
-            {" "}
-            Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
+            Current exchange: {exchangeData.at(-1)?.toLocaleString()}
           </Typography>
         ) : (
           <Typography variant="body1" color="secondary">
@@ -211,24 +221,8 @@ const HistoricalPage: NextPageWithLayout = () => {
           </Typography>
         )}
       </Stack>
-      <Line options={options} data={data} />
-
-      {/* {user ? (
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          justifyContent="flex-end"
-          alignItems="center"
-          mt={4}
-        >
-          <a href="/historical.pdf" download>
-            <Button variant="contained" color="error">
-              Download pdf
-            </Button>
-          </a>
-        </Stack>
-      ) : null} */}
-      <Stack
+      <Line options={options} data={data}/>
+      {/* <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="flex-end"
@@ -240,7 +234,7 @@ const HistoricalPage: NextPageWithLayout = () => {
             Download pdf
           </Button>
         </a>
-      </Stack>
+      </Stack> */}
     </Container>
   );
 };

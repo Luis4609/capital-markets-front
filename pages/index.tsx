@@ -34,13 +34,31 @@ const Home: NextPageWithLayout = () => {
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("EUR");
 
-  //Storage
-  const { getItem } = useStorage();
+  // const formatInputAmount = (event: any) => {
+  //   const NUMBER_DOT_COMMA = /^[\d,.]*$/;
+  //   const fieldValue = event.target.value;
+  //   const fieldHasCommaOrDot =
+  //     fieldValue.includes(".") || fieldValue.includes(",");
+  //   const keyIsCommaOrDot = event.key === "." || event.key === ",";
 
-  const token = getItem("userAuth", "local");
+  //   if (
+  //     !NUMBER_DOT_COMMA.test(event.key) ||
+  //     (keyIsCommaOrDot && fieldHasCommaOrDot)
+  //   )
+  //     event.preventDefault();
+  //   event.target.value = fieldValue.replace(",", ".");
+  // };
 
-  console.log("TOKEN STORAGE user index: ", token); // will return either a <token-value> or <''>
-
+  const handleChangeAmount = (event: {
+    target: { value: SetStateAction<number> };
+  }) => {
+    if (Number.isNaN(event.target.value) || undefined) {
+      toast.error("Bad amount input");
+    } else {
+      console.log(`Amount ${event.target.value}`);
+      setAmount(event.target.value);
+    }
+  };
   const handleChangeCurrencyFrom = (event: {
     target: { value: SetStateAction<string> };
   }) => {
@@ -65,25 +83,33 @@ const Home: NextPageWithLayout = () => {
 
   //* Extract this useEffect in a custom hook?
   useEffect(() => {
-    let isCancelled = false;
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-    fetch(
-      `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        if (!isCancelled) {
-          setAmountOutPut(data.rates[currencyTo]);
+    if (
+      currencyFrom === currencyTo ||
+      Number.isNaN(amount) ||
+      amount.toString().includes(",")
+    ) {
+      console.error(`Amount value ${amount}`);
+      toast.error("Bad inputs");
+    } else {
+      fetch(
+        `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`,
+        {
+          signal,
         }
-      })
-      .catch((error) => {
-        console.log(`Error to fetch exchange conversion: ${error.message}`);
-        toast.error("Bad conversion inputs!");
-      });
-
-    return () => {
-      isCancelled = true;
-    };
+      )
+        .then((resp) => resp.json())
+        .then((data) => setAmountOutPut(data.rates[currencyTo]))
+        .catch((err) => {
+          if (err.name === "AbortError") {
+            console.log("Cancelled");
+          } else {
+            toast.error("Bad inputs");
+          }
+        });
+    }
   }, [currencyFrom, currencyTo, amount]);
 
   return (
@@ -97,13 +123,21 @@ const Home: NextPageWithLayout = () => {
               direction={{ xs: "column", sm: "row" }}
               spacing={{ xs: 2, sm: 3, md: 4 }}
             >
-              <TextField
+              {/* <TextField
+                id="amount"
+                type="text"
+                label="Amount"
+                value={amount}
+                // onKeyPress={formatInputAmount}
+                onChange={(event: any) => handleChangeAmount(event)}
+              /> */}
+                <TextField
                 id="amount"
                 type="number"
                 label="Amount"
                 value={amount}
-                onChange={(e) => setAmount(parseFloat(e.target.value))}
-                
+                // onKeyPress={formatInputAmount}
+                onChange={(event: any) => handleChangeAmount(event)}
               />
               <CurrencyInput
                 label="From"
@@ -175,17 +209,5 @@ Home.getLayout = function getLayout(page) {
     </Layout>
   );
 };
-
-//* Get currency list from the back
-// export async function getStaticProps() {
-//   const res = await fetch(API_BACK_ALLCURRENCIES);
-//   const currencies = await res.json();
-
-//   return {
-//     props: {
-//       currencies,
-//     },
-//   };
-// }
 
 export default Home;

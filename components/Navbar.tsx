@@ -15,7 +15,7 @@ const Navbar = () => {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    setUser(getItem("userAuth"));
+    setUser(getItem("userAuth", "local"));
   });
 
   return (
@@ -26,7 +26,7 @@ const Navbar = () => {
         elevation={0}
         sx={{
           borderBottom: (theme: { palette: { divider: string } }) =>
-            `1px solid ${theme.palette.divider}`,
+            `2px solid ${theme.palette.divider}`,
         }}
       >
         <Toolbar sx={{ flexWrap: "wrap" }}>
@@ -42,14 +42,6 @@ const Navbar = () => {
             </Link>
           </Typography>
           <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Converter
-            </Link>
             <Link
               variant="button"
               color="text.primary"

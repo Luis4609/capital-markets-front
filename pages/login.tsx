@@ -1,7 +1,7 @@
-import { ReactElement, useState } from "react";
-import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
+import { ReactElement } from "react";
+import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -14,8 +14,8 @@ import Layout from "../components/Layout/layout";
 import { UserLoginSubmitForm } from "../types/user";
 import { NextPageWithLayout } from "./_app";
 
-import { validationSchemaLogin } from "../validators/schema";
 import { API_BACK_LOGIN } from "../utils/urls";
+import { validationSchemaLogin } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
 
@@ -25,7 +25,7 @@ import toast, { Toaster } from "react-hot-toast";
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
 
-  const { setItem } = useStorage();
+  const { getItem, setItem } = useStorage();
 
   const {
     register,
@@ -38,37 +38,16 @@ const LoginPage: NextPageWithLayout = () => {
   const onSubmit = (data: UserLoginSubmitForm) => {
     console.log("JSON FROM: " + JSON.stringify(data, null, 2));
 
-    // setUser(JSON.stringify(data, null, 2));
-
-    //Request BACK-END ENDPOINT
-    fetch(API_BACK_LOGIN, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("RESPUESTA DEL POST: ", data);
-        if (data.mail != null) {
-          setItem("userAuth", data.mail, "local");
-          router.push("/");
-        } else {
-          toast.error("Bad credentials!");
-        }
-      })
-      .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
+    if (getItem("userAuth", "local")) {
+      router.push("/");
+    }else{
+      toast.error("Email or password are invalid")
+    }
   };
 
   return (
-    <div className={styles.main}>
-      <Typography
-        variant="h6"
-        color="textSecondary"
-        component="h2"
-        gutterBottom
-      >
+    <div className={styles.login}>
+      <Typography variant="h5" color="textPrimary" component="h2" gutterBottom>
         Login
       </Typography>
 
@@ -77,9 +56,9 @@ const LoginPage: NextPageWithLayout = () => {
           id="mail"
           label="Email"
           type="email"
-          fullWidth
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("mail")}
           error={errors.mail ? true : false}
         />
@@ -91,9 +70,9 @@ const LoginPage: NextPageWithLayout = () => {
           id="password"
           label="Password"
           type="password"
-          fullWidth
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("password")}
           error={errors.password ? true : false}
         />
