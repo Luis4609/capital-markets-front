@@ -26,6 +26,8 @@ import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
 
 import useStorage from "hooks/useStorage";
+import { useUser } from "@supabase/supabase-auth-helpers/react";
+import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -34,28 +36,27 @@ const Home: NextPageWithLayout = () => {
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("EUR");
 
-  // const formatInputAmount = (event: any) => {
-  //   const NUMBER_DOT_COMMA = /^[\d,.]*$/;
-  //   const fieldValue = event.target.value;
-  //   const fieldHasCommaOrDot =
-  //     fieldValue.includes(".") || fieldValue.includes(",");
-  //   const keyIsCommaOrDot = event.key === "." || event.key === ",";
+  const { user, error } = useUser();
+  const [data, setData] = useState<any>({});
 
-  //   if (
-  //     !NUMBER_DOT_COMMA.test(event.key) ||
-  //     (keyIsCommaOrDot && fieldHasCommaOrDot)
-  //   )
-  //     event.preventDefault();
-  //   event.target.value = fieldValue.replace(",", ".");
-  // };
+  useEffect(() => {
+    async function loadData() {
+      const { data } = await supabaseClient.from("test").select("*");
+      setData(data);
+    }
+    // Only run query once user is logged in.
+    if (user) loadData();
+  }, [user]);
 
   const handleChangeAmount = (event: {
     target: { value: SetStateAction<number> };
   }) => {
-    if (Number.isNaN(event.target.value) || undefined) {
+    if (
+      Number.isNaN(event.target.value) ||
+      event.target.value == undefined // || event.target.value.toString().length == 0
+    ) {
       toast.error("Bad amount input");
     } else {
-      console.log(`Amount ${event.target.value}`);
       setAmount(event.target.value);
     }
   };
@@ -89,9 +90,9 @@ const Home: NextPageWithLayout = () => {
     if (
       currencyFrom === currencyTo ||
       Number.isNaN(amount) ||
-      amount.toString().includes(",")
+      amount.toString().includes(",") ||
+      amount.toString().length == 0
     ) {
-      console.error(`Amount value ${amount}`);
       toast.error("Bad inputs");
     } else {
       fetch(
@@ -112,6 +113,20 @@ const Home: NextPageWithLayout = () => {
     }
   }, [currencyFrom, currencyTo, amount]);
 
+  // if (!user)
+  //   return (
+  //     <>
+  //       {error && <p>{error.message}</p>}
+  //       <Auth
+  //         // view="update_password"
+  //         supabaseClient={supabaseClient}
+  //         providers={["google", "github"]}
+  //         socialLayout="horizontal"
+  //         socialButtonSize="xlarge"
+  //       />
+  //     </>
+  //   );
+
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>Capital Markets Converter</h1>
@@ -131,7 +146,7 @@ const Home: NextPageWithLayout = () => {
                 // onKeyPress={formatInputAmount}
                 onChange={(event: any) => handleChangeAmount(event)}
               /> */}
-                <TextField
+              <TextField
                 id="amount"
                 type="number"
                 label="Amount"

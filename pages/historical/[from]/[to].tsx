@@ -6,7 +6,7 @@ import {
   LineElement,
   PointElement,
   Title,
-  Tooltip
+  Tooltip,
 } from "chart.js";
 import { format } from "date-fns";
 import { ReactElement, useEffect, useState } from "react";
@@ -73,11 +73,13 @@ const HistoricalPage: NextPageWithLayout = () => {
   );
 
   useEffect(() => {
-
     if (startDate > endDate) {
       toast.error("Start Date is greater than the End Date");
+      setDeleteChart("Error");
     } else if (from == undefined || to == undefined) {
+      setDeleteChart("Error");
     } else if (from === to) {
+      setDeleteChart("Error");
       toast.error("You can't select the same currency");
     } else {
       const controller = new AbortController();
@@ -91,7 +93,10 @@ const HistoricalPage: NextPageWithLayout = () => {
       )
         .then((resp) => resp.json())
         .then((data) => {
-          setHistoricData(data.rates);
+          {
+            setHistoricData(data.rates);
+            setDeleteChart("");
+          }
         })
         .catch((err) => {
           if (err.name === "AbortError") {
@@ -123,12 +128,25 @@ const HistoricalPage: NextPageWithLayout = () => {
     datasets: [
       {
         label: `Currency exchange between ${from} and ${to}`,
-        data: exchangeData.map((pepe) => pepe),
+        data: exchangeData.map((exchange) => exchange),
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
   };
+  const emptyData = {
+    labels,
+    datasets: [
+      {
+        label: `Currency exchange between ${from} and ${to}`,
+        data: 0,
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  };
+
+  const [deleteChart, setDeleteChart] = useState<string>();
 
   const handleFilterStartDate = (newValue: any) => {
     if (new Date(newValue).toString() == "Invalid Date") {
@@ -178,6 +196,8 @@ const HistoricalPage: NextPageWithLayout = () => {
       });
   };
 
+  console.log(`DELETE CHART ${deleteChart} y length ${deleteChart?.length}`);
+
   return (
     <Container
       sx={{ marginBottom: "3rem", marginTop: "3rem" }}
@@ -221,7 +241,11 @@ const HistoricalPage: NextPageWithLayout = () => {
           </Typography>
         )}
       </Stack>
-      <Line options={options} data={data}/>
+      {deleteChart?.length == 0 ? (
+        <Line options={options} data={data} />
+      ) : (
+        <Line options={options} data={emptyData} />
+      )}
       {/* <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}

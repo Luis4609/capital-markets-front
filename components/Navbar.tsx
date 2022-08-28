@@ -1,18 +1,15 @@
-import {
-  AppBar,
-  Avatar,
-  Button,
-  Link,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Button, Link, Toolbar, Typography } from "@mui/material";
 import useStorage from "hooks/useStorage";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   const { getItem, removeItem } = useStorage();
   const [user, setUser] = useState<any>(null);
+
+  const router = useRouter();
+  const actualPage: string = router.asPath;
 
   useEffect(() => {
     setUser(getItem("userAuth", "local"));
@@ -42,14 +39,25 @@ const Navbar = () => {
             </Link>
           </Typography>
           <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/historical/USD/EUR"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Historical
-            </Link>
+            {actualPage == "/" ? (
+              <Link
+                variant="button"
+                color="text.primary"
+                href="/historical/USD/EUR"
+                sx={{ my: 1, mx: 1.5 }}
+              >
+                Historical
+              </Link>
+            ) : (
+              <Link
+                variant="button"
+                color="text.primary"
+                href="/"
+                sx={{ my: 1, mx: 1.5 }}
+              >
+                Converter
+              </Link>
+            )}
           </nav>
           {user ? (
             <UserMenu
