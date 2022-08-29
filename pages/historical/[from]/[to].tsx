@@ -27,6 +27,7 @@ import LocalizedDatePicker from "components/LocaleDatePicker";
 import useStorage from "hooks/useStorage";
 import toast, { Toaster } from "react-hot-toast";
 import { UrlObject } from "url";
+import styles from "../../../styles/Home.module.css";
 import { options } from "../../../utils/chart";
 import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
@@ -41,10 +42,7 @@ ChartJS.register(
   Legend
 );
 
-// interface useFetchHistoricProps {
-//   from: string | string[] | undefined;
-//   to: string | string[] | undefined;
-// }
+const ACTUAL_DATE = Date.now();
 
 const HistoricalPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -69,14 +67,25 @@ const HistoricalPage: NextPageWithLayout = () => {
     format(new Date(2022, 0, 1), "yyyy-MM-dd")
   );
   const [endDate, setEndDate] = useState<string>(
-    format(new Date(2022, 8, 24), "yyyy-MM-dd")
+    format(new Date(2022, 7, 29), "yyyy-MM-dd")
   );
+
+  // let parts =startDate.split('-');
+  // let mydate = new Date(parts[0], parts[1] - 1, parts[2]);
+  // console.log("COMPARE", mydate.toDateString());
+
+  // console.log(ACTUAL_DATE.toString());
 
   useEffect(() => {
     if (startDate > endDate) {
       toast.error("Start Date is greater than the End Date");
       setDeleteChart("Error");
-    } else if (from == undefined || to == undefined) {
+    } 
+    // else if (startDate > ACTUAL_DATE.toString()) {
+    //   toast.error("Start Date is greater than actual date");
+    //   setDeleteChart("Error");
+    // } 
+    else if (from == undefined || to == undefined) {
       setDeleteChart("Error");
     } else if (from === to) {
       setDeleteChart("Error");
@@ -196,57 +205,56 @@ const HistoricalPage: NextPageWithLayout = () => {
       });
   };
 
-  console.log(`DELETE CHART ${deleteChart} y length ${deleteChart?.length}`);
-
   return (
-    <Container
-      sx={{ marginBottom: "3rem", marginTop: "3rem" }}
-      disableGutters={true}
-      maxWidth="lg"
-    >
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
+    <div className={styles.main}>
+      <Container
+        sx={{ marginBottom: "3rem", marginTop: "3rem" }}
+        disableGutters={true}
+        maxWidth="xl"
       >
-        <LocalizedDatePicker
-          label="Start Date"
-          date={startDate}
-          handleDateChange={handleFilterStartDate}
-        ></LocalizedDatePicker>
-        <LocalizedDatePicker
-          label="End Date"
-          date={endDate}
-          handleDateChange={handleFilterEndDate}
-        ></LocalizedDatePicker>
-        <Toaster></Toaster>
-        <CurrencyInput
-          label="From"
-          currency={FROM_CURRENCY || ""}
-          handleCurrencyChange={handleChangeCurrencyFrom}
-        ></CurrencyInput>
-        <CurrencyInput
-          label="TO"
-          currency={TO_CURRENCY || ""}
-          handleCurrencyChange={handleChangeCurrencyTo}
-        ></CurrencyInput>
-        {from !== to ? (
-          <Typography variant="h5" color="primary">
-            Current exchange: {exchangeData.at(-1)?.toLocaleString()}
-          </Typography>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <LocalizedDatePicker
+            label="Start Date"
+            date={startDate}
+            handleDateChange={handleFilterStartDate}
+          ></LocalizedDatePicker>
+          <LocalizedDatePicker
+            label="End Date"
+            date={endDate}
+            handleDateChange={handleFilterEndDate}
+          ></LocalizedDatePicker>
+          <Toaster></Toaster>
+          <CurrencyInput
+            label="From"
+            currency={FROM_CURRENCY || ""}
+            handleCurrencyChange={handleChangeCurrencyFrom}
+          ></CurrencyInput>
+          <CurrencyInput
+            label="TO"
+            currency={TO_CURRENCY || ""}
+            handleCurrencyChange={handleChangeCurrencyTo}
+          ></CurrencyInput>
+          {from !== to ? (
+            <Typography variant="h5" color="primary">
+              Current exchange: {exchangeData.at(-1)?.toLocaleString()}
+            </Typography>
+          ) : (
+            <Typography variant="body1" color="secondary">
+              You selected the same currency or the input is incorrect
+            </Typography>
+          )}
+        </Stack>
+        {deleteChart?.length == 0 ? (
+          <Line options={options} data={data} />
         ) : (
-          <Typography variant="body1" color="secondary">
-            You selected the same currency or the input is incorrect
-          </Typography>
+          <Line options={options} data={emptyData} />
         )}
-      </Stack>
-      {deleteChart?.length == 0 ? (
-        <Line options={options} data={data} />
-      ) : (
-        <Line options={options} data={emptyData} />
-      )}
-      {/* <Stack
+        {/* <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="flex-end"
@@ -259,7 +267,8 @@ const HistoricalPage: NextPageWithLayout = () => {
           </Button>
         </a>
       </Stack> */}
-    </Container>
+      </Container>
+    </div>
   );
 };
 

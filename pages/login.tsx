@@ -38,38 +38,38 @@ const LoginPage: NextPageWithLayout = () => {
     resolver: yupResolver(validationSchemaLogin),
   });
 
-  useEffect(() => {
-    let mounted = true;
+  // useEffect(() => {
+  //   let mounted = true;
 
-    async function getInitialSession() {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+  //   async function getInitialSession() {
+  //     const {
+  //       data: { session },
+  //     } = await supabase.auth.getSession();
 
-      // only update the react state if the component is still mounted
-      if (mounted) {
-        if (session) {
-          setSession(session);
-        }
+  //     // only update the react state if the component is still mounted
+  //     if (mounted) {
+  //       if (session) {
+  //         setSession(session);
+  //       }
 
-        setIsLoading(false);
-      }
-    }
+  //       setIsLoading(false);
+  //     }
+  //   }
 
-    getInitialSession();
+  //   getInitialSession();
 
-    const { subscription }: any = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
+  //   const { subscription }: any = supabase.auth.onAuthStateChange(
+  //     (_event, session) => {
+  //       setSession(session);
+  //     }
+  //   );
 
-    return () => {
-      mounted = false;
+  //   return () => {
+  //     mounted = false;
 
-      subscription?.unsubscribe();
-    };
-  }, []);
+  //     subscription?.unsubscribe();
+  //   };
+  // }, []);
 
   const onSubmit = async (data: UserLoginSubmitForm) => {
     console.log("JSON FROM: " + JSON.stringify(data, null, 2));
@@ -91,7 +91,7 @@ const LoginPage: NextPageWithLayout = () => {
       if (error) throw error;
       alert("Check your email for the login link!");
     } catch (error) {
-      alert(error?.error_description || error?.message);
+      // alert(error?.error_description || error?.message);
     } finally {
       setIsLoading(false);
     }

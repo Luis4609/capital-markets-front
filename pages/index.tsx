@@ -26,8 +26,8 @@ import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
 
 import useStorage from "hooks/useStorage";
-import { useUser } from "@supabase/supabase-auth-helpers/react";
-import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+// import { useUser } from "@supabase/supabase-auth-helpers/react";
+// import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -36,17 +36,19 @@ const Home: NextPageWithLayout = () => {
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("EUR");
 
-  const { user, error } = useUser();
-  const [data, setData] = useState<any>({});
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  useEffect(() => {
-    async function loadData() {
-      const { data } = await supabaseClient.from("test").select("*");
-      setData(data);
-    }
-    // Only run query once user is logged in.
-    if (user) loadData();
-  }, [user]);
+  // const { user, error } = useUser();
+  // const [data, setData] = useState<any>({});
+
+  // useEffect(() => {
+  //   async function loadData() {
+  //     const { data } = await supabaseClient.from("test").select("*");
+  //     setData(data);
+  //   }
+  //   // Only run query once user is logged in.
+  //   if (user) loadData();
+  // }, [user]);
 
   const handleChangeAmount = (event: {
     target: { value: SetStateAction<number> };
@@ -75,6 +77,7 @@ const Home: NextPageWithLayout = () => {
   const handleCurrencyChanges = () => {
     if (currencyFrom === currencyTo) {
       toast.error("Same currencies!!!. Please check");
+      setErrorMessage("Error");
     } else {
       setCurrencyFrom((prev) => currencyTo);
       setCurrencyTo((prev) => currencyFrom);
@@ -87,14 +90,13 @@ const Home: NextPageWithLayout = () => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    if (
-      currencyFrom === currencyTo ||
-      Number.isNaN(amount) ||
-      amount.toString().includes(",") ||
-      amount.toString().length == 0
-    ) {
-      toast.error("Bad inputs");
+    if (Number.isNaN(amount) || amount.toString().length == 0) {
+      toast.error("Bad amount input");
+      setAmountOutPut(0);
+    } else if (currencyFrom === currencyTo) {
+      setErrorMessage("Error");
     } else {
+      setErrorMessage("");
       fetch(
         `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`,
         {
@@ -146,14 +148,30 @@ const Home: NextPageWithLayout = () => {
                 // onKeyPress={formatInputAmount}
                 onChange={(event: any) => handleChangeAmount(event)}
               /> */}
-              <TextField
-                id="amount"
-                type="number"
-                label="Amount"
-                value={amount}
-                // onKeyPress={formatInputAmount}
-                onChange={(event: any) => handleChangeAmount(event)}
-              />
+              {errorMessage.length != 0 ? (
+                <TextField
+                  id="amount"
+                  type="number"
+                  label="Amount"
+                  value={amount}
+                  disabled={true}
+                  // onKeyPress={formatInputAmount}
+                  onChange={(event: any) => handleChangeAmount(event)}
+                />
+              ) : (
+                <TextField
+                  id="amount"
+                  type="number"
+                  label="Amount"
+                  value={amount}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  // onKeyPress={formatInputAmount}
+                  onChange={(event: any) => handleChangeAmount(event)}
+                />
+              )}
+
               <CurrencyInput
                 label="From"
                 currency={currencyFrom}

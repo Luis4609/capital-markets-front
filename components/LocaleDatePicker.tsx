@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
 import deLocale from "date-fns/locale/de";
 import enLocale from "date-fns/locale/en-US";
 import es from "date-fns/locale/es";
@@ -31,6 +32,8 @@ interface IDatePicker {
   handleDateChange: any;
 }
 
+const ACTUAL_DATE =  Date.now().toLocaleString()
+
 export default function LocalizedDatePicker({
   label,
   date,
@@ -42,6 +45,7 @@ export default function LocalizedDatePicker({
   const selectLocale = (newLocale: any) => {
     setLocale(newLocale);
   };
+
 
   return (
     <LocalizationProvider
@@ -69,6 +73,7 @@ export default function LocalizedDatePicker({
           views={["day", "month", "year"]}
           mask={maskMap[locale]}
           value={date}
+          maxDate={new Date()}
           onChange={handleDateChange}
           renderInput={(params) => <TextField {...params} />}
         />
