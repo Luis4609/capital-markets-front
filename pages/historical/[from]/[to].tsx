@@ -23,14 +23,14 @@ import { Container, Stack, Typography } from "@mui/material";
 
 import { useRouter } from "next/router";
 
-import Button from "@mui/material/Button";
 import LocalizedDatePicker from "components/LocaleDatePicker";
-import { Toaster } from "react-hot-toast";
+import useStorage from "hooks/useStorage";
+import toast, { Toaster } from "react-hot-toast";
 import { UrlObject } from "url";
+import styles from "../../../styles/Home.module.css";
 import { options } from "../../../utils/chart";
 import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
-import useStorage from "hooks/useStorage";
 
 ChartJS.register(
   CategoryScale,
@@ -42,14 +42,19 @@ ChartJS.register(
   Legend
 );
 
-// interface useFetchHistoricProps {
-//   from: string | string[] | undefined;
-//   to: string | string[] | undefined;
-// }
+const ACTUAL_DATE = Date.now();
 
 const HistoricalPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { from, to } = router.query;
+
+  //HANDLE USER AUTH
+  const { getItem } = useStorage();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    setUser(getItem("userAuth"));
+  }, [user]);
 
   /* eslint-disable-next-line */
   const FROM_CURRENCY: string | undefined = from?.toString();
@@ -62,35 +67,52 @@ const HistoricalPage: NextPageWithLayout = () => {
     format(new Date(2022, 0, 1), "yyyy-MM-dd")
   );
   const [endDate, setEndDate] = useState<string>(
-    format(new Date(2022, 8, 24), "yyyy-MM-dd")
+    format(new Date(2022, 7, 29), "yyyy-MM-dd")
   );
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    if (startDate > endDate) {
+      toast.error("Start Date is greater than the End Date");
+      setDeleteChart("Error");
+    }
+    // else if (startDate > ACTUAL_DATE.toString()) {
+    //   toast.error("Start Date is greater than actual date");
+    //   setDeleteChart("Error");
+    // }
+    else if (from == undefined || to == undefined) {
+      setDeleteChart("Error");
+    } else if (from === to) {
+      setDeleteChart("Error");
+      toast.error("You can't select the same currency");
+    } else {
+      const controller = new AbortController();
+      const signal = controller.signal;
 
-    fetch(
-      `https://${API_URL}/${startDate}..${endDate}?amount=1&from=${from}&to=${to}`,
-      {
-        signal,
-      }
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        setHistoricData(data.rates);
-        handleDownloadPdf();
-      })
-      .catch((err) => {
-        if (err.name === "AbortError") {
-          console.log("Cancelled");
-        } else {
-          console.log("Bad fetch: ", err.message);
+      fetch(
+        `https://${API_URL}/${startDate}..${endDate}?amount=1&from=${from}&to=${to}`,
+        {
+          signal,
         }
-      });
+      )
+        .then((resp) => resp.json())
+        .then((data) => {
+          {
+            setHistoricData(data.rates);
+            setDeleteChart("");
+          }
+        })
+        .catch((err) => {
+          if (err.name === "AbortError") {
+            console.log("Cancelled");
+          } else {
+            console.info("Bad fetch: ", err.message);
+          }
+        });
 
-    return () => {
-      controller.abort();
-    };
+      return () => {
+        controller.abort();
+      };
+    }
   }, [from, to, startDate, endDate]);
 
   //Labels con las fechas
@@ -104,12 +126,26 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
+  //Data for the Chart component
+  const [deleteChart, setDeleteChart] = useState<string>();
+
   const data = {
     labels,
     datasets: [
       {
         label: `Currency exchange between ${from} and ${to}`,
-        data: exchangeData.map((pepe) => pepe),
+        data: exchangeData.map((exchange) => exchange),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  };
+  const emptyData = {
+    labels,
+    datasets: [
+      {
+        label: `Currency exchange between ${from} and ${to}`,
+        data: 0,
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
@@ -164,71 +200,56 @@ const HistoricalPage: NextPageWithLayout = () => {
       });
   };
 
-  const { getItem } = useStorage();
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    setUser(getItem("userAuth"));
-  }, [user]);
-
   return (
-    <Container sx={{ marginTop: "2rem" }} disableGutters={true} maxWidth="xl">
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
+    <div className={styles.main}>
+      <Container
+        sx={{ marginBottom: "3rem", marginTop: "3rem" }}
+        disableGutters={true}
+        maxWidth="xl"
       >
-        <LocalizedDatePicker
-          label="Start Date"
-          date={startDate}
-          handleDateChange={handleFilterStartDate}
-        ></LocalizedDatePicker>
-        <LocalizedDatePicker
-          label="End Date"
-          date={endDate}
-          handleDateChange={handleFilterEndDate}
-        ></LocalizedDatePicker>
-        <Toaster></Toaster>
-        <CurrencyInput
-          label="From"
-          currency={FROM_CURRENCY || ""}
-          handleCurrencyChange={handleChangeCurrencyFrom}
-        ></CurrencyInput>
-        <CurrencyInput
-          label="TO"
-          currency={TO_CURRENCY || ""}
-          handleCurrencyChange={handleChangeCurrencyTo}
-        ></CurrencyInput>
-        {from !== to ? (
-          <Typography variant="h5" color="primary">
-            {" "}
-            Currenct exchange: {exchangeData.at(-1)?.toFixed(3)}
-          </Typography>
-        ) : (
-          <Typography variant="body1" color="secondary">
-            You selected the same currency or the input is incorrect
-          </Typography>
-        )}
-      </Stack>
-      <Line options={options} data={data} />
-
-      {user ? (
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
-          justifyContent="flex-end"
+          justifyContent="center"
           alignItems="center"
-          mt={4}
         >
-          <a href="/historical.pdf" download>
-            <Button variant="contained" color="error">
-              Download pdf
-            </Button>
-          </a>
+          <LocalizedDatePicker
+            label="Start Date"
+            date={startDate}
+            handleDateChange={handleFilterStartDate}
+          ></LocalizedDatePicker>
+          <LocalizedDatePicker
+            label="End Date"
+            date={endDate}
+            handleDateChange={handleFilterEndDate}
+          ></LocalizedDatePicker>
+          <Toaster></Toaster>
+          <CurrencyInput
+            label="From"
+            currency={FROM_CURRENCY || ""}
+            handleCurrencyChange={handleChangeCurrencyFrom}
+          ></CurrencyInput>
+          <CurrencyInput
+            label="TO"
+            currency={TO_CURRENCY || ""}
+            handleCurrencyChange={handleChangeCurrencyTo}
+          ></CurrencyInput>
+          {from !== to ? (
+            <Typography variant="h5" color="primary">
+              Current exchange: {exchangeData.at(-1)?.toLocaleString()}
+            </Typography>
+          ) : (
+            <Typography variant="body1" color="secondary">
+              You selected the same currency or the input is incorrect
+            </Typography>
+          )}
         </Stack>
-      ) : null}
-      {/* <Stack
+        {deleteChart?.length == 0 ? (
+          <Line options={options} data={data} />
+        ) : (
+          <Line options={options} data={emptyData} />
+        )}
+        {/* <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="flex-end"
@@ -241,7 +262,8 @@ const HistoricalPage: NextPageWithLayout = () => {
           </Button>
         </a>
       </Stack> */}
-    </Container>
+      </Container>
+    </div>
   );
 };
 

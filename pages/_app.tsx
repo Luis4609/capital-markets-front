@@ -1,12 +1,11 @@
+import { ReactElement, ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode } from "react";
-import "../styles/globals.css";
-export { reportWebVitals } from "next-axiom";
 import { log } from "next-axiom";
-
-import { AppContextProvider } from "context/AppContext";
-import { UserProvider } from "context/AuthUserContext";
+export { reportWebVitals } from "next-axiom";
+import "../styles/globals.css";
+// import { UserProvider } from "@supabase/supabase-auth-helpers/react";
+// import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 
 log.info("Hello from frontend", { foo: "bar" });
 
@@ -18,16 +17,12 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-// export const UserContext = createContext({});
-
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return getLayout(
-    <AppContextProvider>
-      {/* <UserProvider> */}
+    // <UserProvider supabaseClient={supabaseClient}>
       <Component {...pageProps} />
-      {/* </UserProvider> */}
-    </AppContextProvider>
+    // </UserProvider>
   );
 }

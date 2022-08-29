@@ -26,6 +26,8 @@ import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
 
 import useStorage from "hooks/useStorage";
+// import { useUser } from "@supabase/supabase-auth-helpers/react";
+// import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -34,13 +36,32 @@ const Home: NextPageWithLayout = () => {
   const [currencyFrom, setCurrencyFrom] = useState("USD");
   const [currencyTo, setCurrencyTo] = useState("EUR");
 
-  //Storage
-  const { getItem } = useStorage();
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const token = getItem("userAuth", "local");
+  // const { user, error } = useUser();
+  // const [data, setData] = useState<any>({});
 
-  console.log("TOKEN STORAGE user index: ", token); // will return either a <token-value> or <''>
+  // useEffect(() => {
+  //   async function loadData() {
+  //     const { data } = await supabaseClient.from("test").select("*");
+  //     setData(data);
+  //   }
+  //   // Only run query once user is logged in.
+  //   if (user) loadData();
+  // }, [user]);
 
+  const handleChangeAmount = (event: {
+    target: { value: SetStateAction<number> };
+  }) => {
+    if (
+      Number.isNaN(event.target.value) ||
+      event.target.value == undefined // || event.target.value.toString().length == 0
+    ) {
+      toast.error("Bad amount input");
+    } else {
+      setAmount(event.target.value);
+    }
+  };
   const handleChangeCurrencyFrom = (event: {
     target: { value: SetStateAction<string> };
   }) => {
@@ -56,6 +77,7 @@ const Home: NextPageWithLayout = () => {
   const handleCurrencyChanges = () => {
     if (currencyFrom === currencyTo) {
       toast.error("Same currencies!!!. Please check");
+      setErrorMessage("Error");
     } else {
       setCurrencyFrom((prev) => currencyTo);
       setCurrencyTo((prev) => currencyFrom);
@@ -65,26 +87,47 @@ const Home: NextPageWithLayout = () => {
 
   //* Extract this useEffect in a custom hook?
   useEffect(() => {
-    let isCancelled = false;
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-    fetch(
-      `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        if (!isCancelled) {
-          setAmountOutPut(data.rates[currencyTo]);
+    if (Number.isNaN(amount) || amount.toString().length == 0) {
+      toast.error("Bad amount input");
+      setAmountOutPut(0);
+    } else if (currencyFrom === currencyTo) {
+      setErrorMessage("Error");
+    } else {
+      setErrorMessage("");
+      fetch(
+        `https://${API_URL}/latest?amount=${amount}&from=${currencyFrom}&to=${currencyTo}`,
+        {
+          signal,
         }
-      })
-      .catch((error) => {
-        console.log(`Error to fetch exchange conversion: ${error.message}`);
-        toast.error("Bad conversion inputs!");
-      });
-
-    return () => {
-      isCancelled = true;
-    };
+      )
+        .then((resp) => resp.json())
+        .then((data) => setAmountOutPut(data.rates[currencyTo]))
+        .catch((err) => {
+          if (err.name === "AbortError") {
+            console.log("Cancelled");
+          } else {
+            toast.error("Bad inputs");
+          }
+        });
+    }
   }, [currencyFrom, currencyTo, amount]);
+
+  // if (!user)
+  //   return (
+  //     <>
+  //       {error && <p>{error.message}</p>}
+  //       <Auth
+  //         // view="update_password"
+  //         supabaseClient={supabaseClient}
+  //         providers={["google", "github"]}
+  //         socialLayout="horizontal"
+  //         socialButtonSize="xlarge"
+  //       />
+  //     </>
+  //   );
 
   return (
     <main className={styles.main}>
@@ -97,14 +140,42 @@ const Home: NextPageWithLayout = () => {
               direction={{ xs: "column", sm: "row" }}
               spacing={{ xs: 2, sm: 3, md: 4 }}
             >
-              <TextField
+              {/* <TextField
                 id="amount"
-                type="number"
+                type="text"
                 label="Amount"
                 value={amount}
-                onChange={(e) => setAmount(parseFloat(e.target.value))}
-                
-              />
+                // onKeyPress={formatInputAmount}
+                onChange={(event: any) => handleChangeAmount(event)}
+              /> */}
+              {errorMessage.length != 0 ? (
+                <TextField
+                  id="amount"
+                  type="number"
+                  label="Amount"
+                  value={amount}
+                  disabled={true}
+                  // onKeyPress={formatInputAmount}
+                  onChange={(event: any) => handleChangeAmount(event)}
+                />
+              ) : (
+                <TextField
+                  inputProps={{
+                    maxLength: 10,
+                  }}
+                  // onInput={(event: any) => {event.target.value = Math.max(0, parseInt(event.target.value)).toLocaleString().slice(0, 20)}}
+                  id="amount"
+                  type="number"
+                  label="Amount"
+                  value={amount}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  // onKeyPress={formatInputAmount}
+                  onChange={(event: any) => handleChangeAmount(event)}
+                />
+              )}
+
               <CurrencyInput
                 label="From"
                 currency={currencyFrom}
@@ -175,17 +246,5 @@ Home.getLayout = function getLayout(page) {
     </Layout>
   );
 };
-
-//* Get currency list from the back
-// export async function getStaticProps() {
-//   const res = await fetch(API_BACK_ALLCURRENCIES);
-//   const currencies = await res.json();
-
-//   return {
-//     props: {
-//       currencies,
-//     },
-//   };
-// }
 
 export default Home;

@@ -6,7 +6,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Currency Data",
+      text: "",
     },
   },
 };

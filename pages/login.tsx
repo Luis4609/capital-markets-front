@@ -1,7 +1,7 @@
-import { ReactElement, useState } from "react";
-import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
+import { ReactElement } from "react";
+import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -15,17 +15,19 @@ import { UserLoginSubmitForm } from "../types/user";
 import { NextPageWithLayout } from "./_app";
 
 import { validationSchemaLogin } from "../validators/schema";
-import { API_BACK_LOGIN } from "../utils/urls";
 
 import styles from "../styles/Login.module.css";
 
 import useStorage from "hooks/useStorage";
 import toast, { Toaster } from "react-hot-toast";
+import Navbar from "components/Navbar";
+import NavbarLogin from "components/NavbarLogin";
+import { API_BACK_LOGIN } from "utils/urls";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
 
-  const { setItem } = useStorage();
+  const { getItem, setItem } = useStorage();
 
   const {
     register,
@@ -35,12 +37,7 @@ const LoginPage: NextPageWithLayout = () => {
     resolver: yupResolver(validationSchemaLogin),
   });
 
-  const onSubmit = (data: UserLoginSubmitForm) => {
-    console.log("JSON FROM: " + JSON.stringify(data, null, 2));
-
-    // setUser(JSON.stringify(data, null, 2));
-
-    //Request BACK-END ENDPOINT
+  const onSubmit = async (data: UserLoginSubmitForm) => {
     fetch(API_BACK_LOGIN, {
       method: "POST",
       body: JSON.stringify(data),
@@ -50,36 +47,36 @@ const LoginPage: NextPageWithLayout = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("RESPUESTA DEL POST: ", data);
         if (data.mail != null) {
+          console.log("RESPUESTA DEL POST: ", data);
           setItem("userAuth", data.mail, "local");
           router.push("/");
         } else {
-          toast.error("Bad credentials!");
+          toast.error("Email or password are invalid");
         }
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
   };
 
   return (
-    <div className={styles.main}>
-      <Typography
-        variant="h6"
-        color="textSecondary"
-        component="h2"
-        gutterBottom
-      >
+    <div className={styles.login}>
+      <Typography variant="h5" color="textPrimary" component="h2" gutterBottom>
         Login
       </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.form}
+      >
         <TextField
           id="mail"
           label="Email"
           type="email"
-          fullWidth
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("mail")}
           error={errors.mail ? true : false}
         />
@@ -91,9 +88,9 @@ const LoginPage: NextPageWithLayout = () => {
           id="password"
           label="Password"
           type="password"
-          fullWidth
           variant="outlined"
           margin="normal"
+          fullWidth
           {...register("password")}
           error={errors.password ? true : false}
         />
@@ -123,6 +120,7 @@ const LoginPage: NextPageWithLayout = () => {
 LoginPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
+      <NavbarLogin></NavbarLogin>
       {page}
       <Footer></Footer>
     </Layout>

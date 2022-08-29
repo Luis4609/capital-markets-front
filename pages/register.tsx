@@ -1,5 +1,5 @@
-import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { ReactElement } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -9,14 +9,19 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { UserSubmitForm } from "../types/user";
 import { validationSchemaRegister } from "../validators/schema";
 
-import { UserContext } from "context/AuthUserContext";
-import { useContext, useState } from "react";
+import Footer from "components/Footer";
+import Layout from "components/Layout/layout";
+import useStorage from "hooks/useStorage";
+import toast, { Toaster } from "react-hot-toast";
+
 import styles from "../styles/Login.module.css";
 import { API_BACK_REGISTER } from "../utils/urls";
+import { NextPageWithLayout } from "./_app";
+import NavbarLogin from "components/NavbarLogin";
 
-const RegisterPage: NextPage = () => {
+const RegisterPage: NextPageWithLayout = () => {
   const router = useRouter();
-  const { login } = useContext(UserContext);
+  const { setItem } = useStorage();
 
   const {
     register,
@@ -28,8 +33,6 @@ const RegisterPage: NextPage = () => {
   });
 
   const onSubmit = (data: UserSubmitForm) => {
-    console.log(JSON.stringify(data, null, 2));
-
     fetch(API_BACK_REGISTER, {
       method: "POST",
       body: JSON.stringify(data),
@@ -39,26 +42,29 @@ const RegisterPage: NextPage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("RESPUESTA DEL POST: ", data);
-        login(data.mail);
+        if (data.mail != null) {
+          console.log("RESPUESTA DEL POST: ", data);
+          setItem("userAuth", data.mail, "local");
+          router.push("/");
+        } else {
+          toast.error("Bad credentials!");
+        }
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
-
-    router.push("/");
   };
 
   return (
-    <div className={styles.main}>
-      <Typography
-        variant="h6"
-        color="textSecondary"
-        component="h2"
-        gutterBottom
-      >
+    <div className={styles.register}>
+      <Typography variant="h5" color="textPrimary" component="h2" gutterBottom>
         Register
       </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.form}
+      >
         <TextField
           id="name"
           label="Name"
@@ -199,9 +205,20 @@ const RegisterPage: NextPage = () => {
           >
             Login
           </Button>
+          <Toaster></Toaster>
         </Stack>
       </form>
     </div>
+  );
+};
+
+RegisterPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      <NavbarLogin></NavbarLogin>
+      {page}
+      <Footer></Footer>
+    </Layout>
   );
 };
 
