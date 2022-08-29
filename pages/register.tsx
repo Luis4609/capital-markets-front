@@ -17,6 +17,7 @@ import toast, { Toaster } from "react-hot-toast";
 import styles from "../styles/Login.module.css";
 import { API_BACK_REGISTER } from "../utils/urls";
 import { NextPageWithLayout } from "./_app";
+import NavbarLogin from "components/NavbarLogin";
 
 const RegisterPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -32,29 +33,24 @@ const RegisterPage: NextPageWithLayout = () => {
   });
 
   const onSubmit = (data: UserSubmitForm) => {
-    console.log(JSON.stringify(data, null, 2));
-
-    setItem("userAuth", data.mail, "local");
-    router.push("/");
-
-    // fetch(API_BACK_REGISTER, {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data.mail != null) {
-    //       console.log("RESPUESTA DEL POST: ", data);
-    //       setItem("userAuth", data.mail, "local");
-    //       router.push("/");
-    //     } else {
-    //       toast.error("Bad credentials!");
-    //     }
-    //   })
-    //   .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
+    fetch(API_BACK_REGISTER, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.mail != null) {
+          console.log("RESPUESTA DEL POST: ", data);
+          setItem("userAuth", data.mail, "local");
+          router.push("/");
+        } else {
+          toast.error("Bad credentials!");
+        }
+      })
+      .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
   };
 
   return (
@@ -63,7 +59,12 @@ const RegisterPage: NextPageWithLayout = () => {
         Register
       </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <form
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.form}
+      >
         <TextField
           id="name"
           label="Name"
@@ -214,6 +215,7 @@ const RegisterPage: NextPageWithLayout = () => {
 RegisterPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
+      <NavbarLogin></NavbarLogin>
       {page}
       <Footer></Footer>
     </Layout>

@@ -21,6 +21,8 @@ import styles from "../styles/Login.module.css";
 import useStorage from "hooks/useStorage";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "components/Navbar";
+import NavbarLogin from "components/NavbarLogin";
+import { API_BACK_LOGIN } from "utils/urls";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -36,13 +38,24 @@ const LoginPage: NextPageWithLayout = () => {
   });
 
   const onSubmit = async (data: UserLoginSubmitForm) => {
-    console.log("JSON FROM: " + JSON.stringify(data, null, 2));
-
-    if (getItem("userAuth", "local")) {
-      router.push("/");
-    } else {
-      toast.error("Email or password are invalid");
-    }
+    fetch(API_BACK_LOGIN, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.mail != null) {
+          console.log("RESPUESTA DEL POST: ", data);
+          setItem("userAuth", data.mail, "local");
+          router.push("/");
+        } else {
+          toast.error("Email or password are invalid");
+        }
+      })
+      .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
   };
 
   return (
@@ -107,7 +120,7 @@ const LoginPage: NextPageWithLayout = () => {
 LoginPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
-      {/* <Navbar></Navbar> */}
+      <NavbarLogin></NavbarLogin>
       {page}
       <Footer></Footer>
     </Layout>
