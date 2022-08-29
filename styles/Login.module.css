@@ -16,3 +16,18 @@
   align-items: center;
 }
 
+.form {
+  width: 20vw;
+}
+
+@media screen and (max-width: 992px) {
+  .form {
+    width: 50vw;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .form {
+    width: 50vw;
+  }
+}

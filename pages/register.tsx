@@ -63,7 +63,7 @@ const RegisterPage: NextPageWithLayout = () => {
         Register
       </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <TextField
           id="name"
           label="Name"

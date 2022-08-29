@@ -58,6 +58,26 @@ const Navbar = () => {
                 Converter
               </Link>
             )}
+            {/* {actualPage == "/login" || actualPage == "/register" ? null : (
+              <>
+                <Link
+                  variant="button"
+                  color="text.primary"
+                  href="/"
+                  sx={{ my: 1, mx: 1.5 }}
+                >
+                  Converter
+                </Link>
+                <Link
+                  variant="button"
+                  color="text.primary"
+                  href="/historical/USD/EUR"
+                  sx={{ my: 1, mx: 1.5 }}
+                >
+                  Historical
+                </Link>
+              </>
+            )} */}
           </nav>
           {user ? (
             <UserMenu

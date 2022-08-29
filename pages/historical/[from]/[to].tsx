@@ -70,21 +70,15 @@ const HistoricalPage: NextPageWithLayout = () => {
     format(new Date(2022, 7, 29), "yyyy-MM-dd")
   );
 
-  // let parts =startDate.split('-');
-  // let mydate = new Date(parts[0], parts[1] - 1, parts[2]);
-  // console.log("COMPARE", mydate.toDateString());
-
-  // console.log(ACTUAL_DATE.toString());
-
   useEffect(() => {
     if (startDate > endDate) {
       toast.error("Start Date is greater than the End Date");
       setDeleteChart("Error");
-    } 
+    }
     // else if (startDate > ACTUAL_DATE.toString()) {
     //   toast.error("Start Date is greater than actual date");
     //   setDeleteChart("Error");
-    // } 
+    // }
     else if (from == undefined || to == undefined) {
       setDeleteChart("Error");
     } else if (from === to) {
@@ -132,6 +126,9 @@ const HistoricalPage: NextPageWithLayout = () => {
     exchangeData.push(value[TO_CURRENCY || ""]);
   }
 
+  //Data for the Chart component
+  const [deleteChart, setDeleteChart] = useState<string>();
+
   const data = {
     labels,
     datasets: [
@@ -154,8 +151,6 @@ const HistoricalPage: NextPageWithLayout = () => {
       },
     ],
   };
-
-  const [deleteChart, setDeleteChart] = useState<string>();
 
   const handleFilterStartDate = (newValue: any) => {
     if (new Date(newValue).toString() == "Invalid Date") {

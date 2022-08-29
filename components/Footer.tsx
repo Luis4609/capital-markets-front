@@ -33,10 +33,6 @@ const Footer = () => {
           <Typography variant="h5">Capital Markets</Typography>
         </Link>
         <SocialLinks />
-        <Typography variant="body1">
-          Company information:
-          <a>About us</a>{" "}
-        </Typography>
         <Copyright />
       </Container>
     </Box>

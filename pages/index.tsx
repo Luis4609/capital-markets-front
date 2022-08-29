@@ -160,6 +160,10 @@ const Home: NextPageWithLayout = () => {
                 />
               ) : (
                 <TextField
+                  inputProps={{
+                    maxLength: 10,
+                  }}
+                  // onInput={(event: any) => {event.target.value = Math.max(0, parseInt(event.target.value)).toLocaleString().slice(0, 20)}}
                   id="amount"
                   type="number"
                   label="Amount"

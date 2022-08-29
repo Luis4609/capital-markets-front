@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
@@ -20,13 +20,10 @@ import styles from "../styles/Login.module.css";
 
 import useStorage from "hooks/useStorage";
 import toast, { Toaster } from "react-hot-toast";
-import { supabase } from "../utils/supabaseClient";
+import Navbar from "components/Navbar";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
-
-  const [isLoading, setIsLoading] = useState<any>(true);
-  const [session, setSession] = useState<any>(null);
 
   const { getItem, setItem } = useStorage();
 
@@ -38,62 +35,13 @@ const LoginPage: NextPageWithLayout = () => {
     resolver: yupResolver(validationSchemaLogin),
   });
 
-  // useEffect(() => {
-  //   let mounted = true;
-
-  //   async function getInitialSession() {
-  //     const {
-  //       data: { session },
-  //     } = await supabase.auth.getSession();
-
-  //     // only update the react state if the component is still mounted
-  //     if (mounted) {
-  //       if (session) {
-  //         setSession(session);
-  //       }
-
-  //       setIsLoading(false);
-  //     }
-  //   }
-
-  //   getInitialSession();
-
-  //   const { subscription }: any = supabase.auth.onAuthStateChange(
-  //     (_event, session) => {
-  //       setSession(session);
-  //     }
-  //   );
-
-  //   return () => {
-  //     mounted = false;
-
-  //     subscription?.unsubscribe();
-  //   };
-  // }, []);
-
   const onSubmit = async (data: UserLoginSubmitForm) => {
     console.log("JSON FROM: " + JSON.stringify(data, null, 2));
 
-    // if (getItem("userAuth", "local")) {
-    //   router.push("/");
-    // } else {
-    //   toast.error("Email or password are invalid");
-    // }
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: data.mail,
-      });
-      // const { error } = await supabase.auth.signInWithPassword({
-      //   email: data.mail,
-      //   password: data.password,
-      // });
-
-      if (error) throw error;
-      alert("Check your email for the login link!");
-    } catch (error) {
-      // alert(error?.error_description || error?.message);
-    } finally {
-      setIsLoading(false);
+    if (getItem("userAuth", "local")) {
+      router.push("/");
+    } else {
+      toast.error("Email or password are invalid");
     }
   };
 
@@ -103,7 +51,12 @@ const LoginPage: NextPageWithLayout = () => {
         Login
       </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.form}
+      >
         <TextField
           id="mail"
           label="Email"
@@ -154,6 +107,7 @@ const LoginPage: NextPageWithLayout = () => {
 LoginPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
+      {/* <Navbar></Navbar> */}
       {page}
       <Footer></Footer>
     </Layout>
