@@ -15,7 +15,7 @@ import useStorage from "hooks/useStorage";
 import toast, { Toaster } from "react-hot-toast";
 
 import styles from "../styles/Login.module.css";
-import { API_BACK_REGISTER } from "../utils/urls";
+import { API_BACK_REGISTER, API_DUMMY_JSON_USERS_ADD_URL } from "../utils/urls";
 import { NextPageWithLayout } from "./_app";
 import NavbarLogin from "components/NavbarLogin";
 
@@ -33,22 +33,41 @@ const RegisterPage: NextPageWithLayout = () => {
   });
 
   const onSubmit = (data: UserSubmitForm) => {
-    fetch(API_BACK_REGISTER, {
+    // fetch(API_BACK_REGISTER, {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (data.mail != null) {
+    //       console.log("RESPUESTA DEL POST: ", data);
+    //       setItem("userAuth", data.mail, "local");
+    //       router.push("/");
+    //     } else {
+    //       toast.error("Bad credentials!");
+    //     }
+    //   })
+    //   .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
+
+    fetch(API_DUMMY_JSON_USERS_ADD_URL, {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        firstName: data.name,
+        lastName: data.surname,
+        email: data.mail,
+        password: data.password,
+      }),
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.mail != null) {
-          console.log("RESPUESTA DEL POST: ", data);
-          setItem("userAuth", data.mail, "local");
-          router.push("/");
-        } else {
-          toast.error("Bad credentials!");
-        }
+        setItem("userAuth", data.email, "local");
+        router.push("/");
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
   };

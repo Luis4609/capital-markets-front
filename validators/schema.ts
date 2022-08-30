@@ -14,11 +14,11 @@ export const validationSchemaLogin = Yup.object().shape({
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required")
-    .test(
-      "one-uppercase character special character and a number",
-      "Password must contain at least one uppercase letter, one special character and one number",
-      (value) => validatePassword(value)
-    ),
+    // .test(
+    //   "one-uppercase character special character and a number",
+    //   "Password must contain at least one uppercase letter, one special character and one number",
+    //   (value) => validatePassword(value)
+    // ),
 });
 
 export const validationSchemaRegister = Yup.object().shape({
