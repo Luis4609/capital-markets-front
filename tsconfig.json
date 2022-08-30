@@ -27,7 +27,7 @@
     "components/Layout/layout.js",
     "pages/new-conversor.jsx",
     "pages/api/currencies.js"
-, "utils/supabaseClient.js"  ],
+, "utils/supabaseClient.js", "pages/translate.jsx"  ],
   "exclude": [
     "node_modules"
   ]

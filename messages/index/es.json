@@ -1,0 +1,17 @@
+{
+    "Index": {
+        "title": "Conversor Capital Markets",
+        "followBack": "Follow back",
+        "amount": "Monto",
+        "from": "De",
+        "to": "A",
+        "exchangeInfo": "Cambio: ",
+        "toInfo": "a",
+        "historicalButton": "Gráfico Histórico"
+    },
+    "Navigations": {
+        "index": "Home",
+        "about": "About",
+        "switchLocale": "Cambiar a {locale, select, de {Español} en {English} other {Unknown}}"
+    }
+}

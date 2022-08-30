@@ -1,0 +1,17 @@
+{
+    "Index": {
+        "title": "Capital Markets Converter",
+        "followBack": "Follow back",
+        "amount": "Amount",
+        "from": "From",
+        "to": "To",
+        "exchangeInfo": "Exchange: ",
+        "toInfo": "to",
+        "historicalButton": "Historical Chart"
+    },
+    "Navigations": {
+        "index": "Home",
+        "about": "About",
+        "switchLocale": "Switch to {locale, select, de {German} en {English} other {Unknown}}"
+    }
+}

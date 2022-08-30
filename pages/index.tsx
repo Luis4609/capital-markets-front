@@ -1,14 +1,7 @@
 import { SetStateAction, useEffect, useState } from "react";
 
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
-import {
-  Box,
-  Button,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import { blue } from "@mui/material/colors";
 
@@ -24,10 +17,8 @@ import { NextPageWithLayout } from "./_app";
 
 import toast, { Toaster } from "react-hot-toast";
 import CurrencyInput from "../components/CurrencyInput";
-
-import useStorage from "hooks/useStorage";
-// import { useUser } from "@supabase/supabase-auth-helpers/react";
-// import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 
 const Home: NextPageWithLayout = () => {
   const [amount, setAmount] = useState(1);
@@ -38,25 +29,14 @@ const Home: NextPageWithLayout = () => {
 
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // const { user, error } = useUser();
-  // const [data, setData] = useState<any>({});
-
-  // useEffect(() => {
-  //   async function loadData() {
-  //     const { data } = await supabaseClient.from("test").select("*");
-  //     setData(data);
-  //   }
-  //   // Only run query once user is logged in.
-  //   if (user) loadData();
-  // }, [user]);
+  //i18n
+  const t = useTranslations("Index");
+  const { locale } = useRouter();
 
   const handleChangeAmount = (event: {
     target: { value: SetStateAction<number> };
   }) => {
-    if (
-      Number.isNaN(event.target.value) ||
-      event.target.value == undefined // || event.target.value.toString().length == 0
-    ) {
+    if (Number.isNaN(event.target.value) || event.target.value == undefined) {
       toast.error("Bad amount input");
     } else {
       setAmount(event.target.value);
@@ -115,23 +95,14 @@ const Home: NextPageWithLayout = () => {
     }
   }, [currencyFrom, currencyTo, amount]);
 
-  // if (!user)
-  //   return (
-  //     <>
-  //       {error && <p>{error.message}</p>}
-  //       <Auth
-  //         // view="update_password"
-  //         supabaseClient={supabaseClient}
-  //         providers={["google", "github"]}
-  //         socialLayout="horizontal"
-  //         socialButtonSize="xlarge"
-  //       />
-  //     </>
-  //   );
-
   return (
     <main className={styles.main}>
-      <h1 className={styles.title}>Capital Markets Converter</h1>
+      <h1 className={styles.title}>
+        {t.rich("title", {
+          locale,
+          h1: (children: any) => <h1>{children}</h1>,
+        })}
+      </h1>
 
       <div className={styles.converter}>
         <Box sx={{ width: "100%" }}>
@@ -140,22 +111,13 @@ const Home: NextPageWithLayout = () => {
               direction={{ xs: "column", sm: "row" }}
               spacing={{ xs: 2, sm: 3, md: 4 }}
             >
-              {/* <TextField
-                id="amount"
-                type="text"
-                label="Amount"
-                value={amount}
-                // onKeyPress={formatInputAmount}
-                onChange={(event: any) => handleChangeAmount(event)}
-              /> */}
               {errorMessage.length != 0 ? (
                 <TextField
                   id="amount"
                   type="number"
-                  label="Amount"
+                  label={t("amount")}
                   value={amount}
                   disabled={true}
-                  // onKeyPress={formatInputAmount}
                   onChange={(event: any) => handleChangeAmount(event)}
                 />
               ) : (
@@ -163,21 +125,19 @@ const Home: NextPageWithLayout = () => {
                   inputProps={{
                     maxLength: 10,
                   }}
-                  // onInput={(event: any) => {event.target.value = Math.max(0, parseInt(event.target.value)).toLocaleString().slice(0, 20)}}
                   id="amount"
                   type="number"
-                  label="Amount"
+                  label={t("amount")}
                   value={amount}
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  // onKeyPress={formatInputAmount}
                   onChange={(event: any) => handleChangeAmount(event)}
                 />
               )}
 
               <CurrencyInput
-                label="From"
+                label={t("from")}
                 currency={currencyFrom}
                 handleCurrencyChange={handleChangeCurrencyFrom}
               ></CurrencyInput>
@@ -190,7 +150,7 @@ const Home: NextPageWithLayout = () => {
               </Avatar>
               <Toaster></Toaster>
               <CurrencyInput
-                label="To"
+                label={t("to")}
                 currency={currencyTo}
                 handleCurrencyChange={handleChangeCurrencyTo}
               ></CurrencyInput>
@@ -204,11 +164,11 @@ const Home: NextPageWithLayout = () => {
             >
               {currencyFrom !== currencyTo && !Number.isNaN(amount) ? (
                 <Typography variant="h5" color="primary">
-                  Exchange:{" "}
+                  {t("exchangeInfo")}
                   {`${currencyFrom} ${Intl.NumberFormat("de-DE", {
                     style: "currency",
                     currency: currencyFrom,
-                  }).format(amount)} to ${currencyTo} = `}
+                  }).format(amount)} ${t("toInfo")} ${currencyTo} = `}
                   {Intl.NumberFormat("de-DE", {
                     style: "currency",
                     currency: currencyTo,
@@ -227,7 +187,7 @@ const Home: NextPageWithLayout = () => {
                   currencyFrom
                 )}/${encodeURIComponent(currencyTo)}`}
               >
-                Historical chart
+                {t("historicalButton")}
               </Button>
             </Stack>
           </form>
@@ -246,5 +206,15 @@ Home.getLayout = function getLayout(page) {
     </Layout>
   );
 };
+
+export function getStaticProps({ locale }: any) {
+  return {
+    props: {
+      messages: {
+        ...require(`../messages/index/${locale}.json`),
+      },
+    },
+  };
+}
 
 export default Home;

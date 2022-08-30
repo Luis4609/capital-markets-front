@@ -4,6 +4,10 @@ const { withAxiom } = require("next-axiom");
 const nextConfig = withAxiom({
   reactStrictMode: true,
   swcMinify: true,
+  i18n: {
+    locales: ["en", "es"],
+    defaultLocale: "es",
+  },
 });
 
 module.exports = nextConfig;

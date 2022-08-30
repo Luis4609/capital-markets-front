@@ -1,11 +1,10 @@
-import { ReactElement, ReactNode } from "react";
 import type { NextPage } from "next";
-import type { AppProps } from "next/app";
 import { log } from "next-axiom";
-export { reportWebVitals } from "next-axiom";
+import { NextIntlProvider } from "next-intl";
+import type { AppProps } from "next/app";
+import { ReactElement, ReactNode } from "react";
 import "../styles/globals.css";
-// import { UserProvider } from "@supabase/supabase-auth-helpers/react";
-// import { supabaseClient } from "@supabase/supabase-auth-helpers/nextjs";
+export { reportWebVitals } from "next-axiom";
 
 log.info("Hello from frontend", { foo: "bar" });
 
@@ -21,8 +20,23 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return getLayout(
-    // <UserProvider supabaseClient={supabaseClient}>
+    <NextIntlProvider
+      // To achieve consistent date, time and number formatting
+      // across the app, you can define a set of global formats.
+      formats={{
+        dateTime: {
+          short: {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+          },
+        },
+      }}
+      messages={pageProps.messages}
+      now={new Date(pageProps.now)}
+      timeZone="Austria/Vienna"
+    >
       <Component {...pageProps} />
-    // </UserProvider>
+    </NextIntlProvider>
   );
 }

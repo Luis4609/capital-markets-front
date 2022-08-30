@@ -31,6 +31,7 @@ import styles from "../../../styles/Home.module.css";
 import { options } from "../../../utils/chart";
 import { API_BACK_HISTORIC_PDF, API_URL } from "../../../utils/urls";
 import { NextPageWithLayout } from "../../_app";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -51,10 +52,14 @@ const HistoricalPage: NextPageWithLayout = () => {
   //HANDLE USER AUTH
   const { getItem } = useStorage();
   const [user, setUser] = useState<any>(null);
-
+  
   useEffect(() => {
     setUser(getItem("userAuth"));
   }, [user]);
+  
+  //i18n
+  // const t = useTranslations("Index");
+  // const { locale } = useRouter();
 
   /* eslint-disable-next-line */
   const FROM_CURRENCY: string | undefined = from?.toString();
@@ -276,5 +281,15 @@ HistoricalPage.getLayout = function getLayout(page: ReactElement) {
     </Layout>
   );
 };
+
+// export function getStaticProps({ locale }: any) {
+//   return {
+//     props: {
+//       messages: {
+//         ...require(`../../../messages/index/${locale}.json`),
+//       },
+//     },
+//   };
+// }
 
 export default HistoricalPage;
