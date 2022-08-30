@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
@@ -18,11 +18,14 @@ import { validationSchemaLogin } from "../validators/schema";
 
 import styles from "../styles/Login.module.css";
 
+import NavbarLogin from "components/NavbarLogin";
 import useStorage from "hooks/useStorage";
 import toast, { Toaster } from "react-hot-toast";
-import Navbar from "components/Navbar";
-import NavbarLogin from "components/NavbarLogin";
-import { API_BACK_LOGIN } from "utils/urls";
+import {
+  API_BACK_LOGIN,
+  API_DUMMY_JSON_USERS_FILTER_URL,
+  API_DUMMY_JSON_USERS_URL,
+} from "utils/urls";
 
 const LoginPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -38,18 +41,31 @@ const LoginPage: NextPageWithLayout = () => {
   });
 
   const onSubmit = async (data: UserLoginSubmitForm) => {
-    fetch(API_BACK_LOGIN, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    // fetch(API_BACK_LOGIN, {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (data.mail != null) {
+    //       console.log("RESPUESTA DEL POST: ", data);
+    //       setItem("userAuth", data.mail, "local");
+    //       router.push("/");
+    //     } else {
+    //       toast.error("Email or password are invalid");
+    //     }
+    //   })
+    //   .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
+
+    fetch(`${API_DUMMY_JSON_USERS_FILTER_URL}${data.mail}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.mail != null) {
-          console.log("RESPUESTA DEL POST: ", data);
-          setItem("userAuth", data.mail, "local");
+        console.log("RESPUESTA DEL POST: ", data.users[0]);
+        if (data.users[0].email != undefined) {
+          setItem("userAuth", data.users[0].firstName, "local");
           router.push("/");
         } else {
           toast.error("Email or password are invalid");
