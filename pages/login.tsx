@@ -41,37 +41,38 @@ const LoginPage: NextPageWithLayout = () => {
   });
 
   const onSubmit = async (data: UserLoginSubmitForm) => {
-    // fetch(API_BACK_LOGIN, {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data.mail != null) {
-    //       console.log("RESPUESTA DEL POST: ", data);
-    //       setItem("userAuth", data.mail, "local");
-    //       router.push("/");
-    //     } else {
-    //       toast.error("Email or password are invalid");
-    //     }
-    //   })
-    //   .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
-
-    fetch(`${API_DUMMY_JSON_USERS_FILTER_URL}${data.mail}`)
+    console.log(data)
+    fetch(API_BACK_LOGIN, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
-        console.log("RESPUESTA DEL POST: ", data.users[0]);
-        if (data.users[0].email != undefined) {
-          setItem("userAuth", data.users[0].firstName, "local");
+        if (data.mail != null) {
+          console.log("RESPUESTA DEL POST: ", data);
+          setItem("userAuth", data.mail, "local");
           router.push("/");
         } else {
           toast.error("Email or password are invalid");
         }
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
+
+    // fetch(`${API_DUMMY_JSON_USERS_FILTER_URL}${data.mail}`)
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log("RESPUESTA DEL POST: ", data.users[0]);
+    //     if (data.users[0].email != undefined) {
+    //       setItem("userAuth", data.users[0].firstName, "local");
+    //       router.push("/");
+    //     } else {
+    //       toast.error("Email or password are invalid");
+    //     }
+    //   })
+    //   .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
   };
 
   return (

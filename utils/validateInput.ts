@@ -32,4 +32,3 @@ export const validateInputDni = (value: string | undefined): boolean => {
   return /^[0-9]{8,8}[A-Za-z]$/.test(value);
 };
 
-// const isUndefined = (val: any) => val === undefined

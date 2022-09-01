@@ -4,7 +4,6 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 
 import Copyright from "./Copyright";
-import Image from "next/image";
 import SocialLinks from "./SocialLinks";
 
 const Footer = () => {

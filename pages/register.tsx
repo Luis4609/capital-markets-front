@@ -33,43 +33,43 @@ const RegisterPage: NextPageWithLayout = () => {
   });
 
   const onSubmit = (data: UserSubmitForm) => {
-    // fetch(API_BACK_REGISTER, {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data.mail != null) {
-    //       console.log("RESPUESTA DEL POST: ", data);
-    //       setItem("userAuth", data.mail, "local");
-    //       router.push("/");
-    //     } else {
-    //       toast.error("Bad credentials!");
-    //     }
-    //   })
-    //   .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
-
-    fetch(API_DUMMY_JSON_USERS_ADD_URL, {
+    fetch(API_BACK_REGISTER, {
       method: "POST",
-      body: JSON.stringify({
-        firstName: data.name,
-        lastName: data.surname,
-        email: data.mail,
-        password: data.password,
-      }),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        setItem("userAuth", data.email, "local");
-        router.push("/");
+        if (data.mail != null) {
+          console.log("RESPUESTA DEL POST: ", data);
+          setItem("userAuth", data.mail, "local");
+          router.push("/");
+        } else {
+          toast.error("Bad credentials!");
+        }
       })
       .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
+
+    // fetch(API_DUMMY_JSON_USERS_ADD_URL, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     firstName: data.name,
+    //     lastName: data.surname,
+    //     email: data.mail,
+    //     password: data.password,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setItem("userAuth", data.email, "local");
+    //     router.push("/");
+    //   })
+    //   .catch((res) => console.log("FALLO EN LA REQUEST: ", res));
   };
 
   return (
