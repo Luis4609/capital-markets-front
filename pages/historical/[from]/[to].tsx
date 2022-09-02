@@ -19,7 +19,7 @@ import Layout from "../../../components/Layout/layout";
 import Navbar from "../../../components/Navbar";
 
 //Components from MUI
-import { Container, Stack, Typography } from "@mui/material";
+import { Button, Container, Stack, Typography } from "@mui/material";
 
 import { useRouter } from "next/router";
 
@@ -104,6 +104,7 @@ const HistoricalPage: NextPageWithLayout = () => {
           {
             setHistoricData(data.rates);
             setDeleteChart("");
+            handleDownloadPdf()
           }
         })
         .catch((err) => {
@@ -254,19 +255,19 @@ const HistoricalPage: NextPageWithLayout = () => {
         ) : (
           <Line options={options} data={emptyData} />
         )}
-        {/* <Stack
+        <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={2}
         justifyContent="flex-end"
         alignItems="center"
         mt={4}
       >
-        <a href="/historical.pdf" download>
+        <a href="/pdf_chart_historical.pdf" download>
           <Button variant="contained" color="error">
             Download pdf
           </Button>
         </a>
-      </Stack> */}
+      </Stack>
       </Container>
     </div>
   );

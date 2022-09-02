@@ -1,5 +1,5 @@
 export const API_URL: string = "api.frankfurter.app";
-export const BACK_URL: string = "http://localhost:8080";
+export const BACK_URL: string = "http://88.1.205.136:8090";
 // export const BACK_URL: string = "srvoptiint3.optimissa.into:19780";
 
 export const API_BACK_ALLCURRENCIES: string = `${BACK_URL}/currencies/list-currencies`;
